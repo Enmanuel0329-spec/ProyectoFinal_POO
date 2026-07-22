@@ -8,7 +8,7 @@ public class BolsaLaboral {
 	private ArrayList<Empresa> lasEmpresas;
 	private ArrayList<Oferta> lasOfertas;
 	private ArrayList<Solicitud> lasSolicitudes;
-	private ArrayList<Usuario> losUsuarios;
+//	private ArrayList<Usuario> losUsuarios;
 
 
 	public static int generadorIdSolicitud = 1;
@@ -23,7 +23,7 @@ public class BolsaLaboral {
 		losPersonal = new ArrayList<>();
 		lasEmpresas = new ArrayList<>();
 		lasOfertas = new ArrayList<>();
-		losUsuarios = new ArrayList<>();
+//		losUsuarios = new ArrayList<>();
 		lasSolicitudes = new ArrayList<>();
 	}
 
@@ -52,10 +52,10 @@ public class BolsaLaboral {
 		generadorIdSolicitud++;
 	}
 
-	public void registrarUsuario(Usuario u) {
+	/*public void registrarUsuario(Usuario u) {
 		losUsuarios.add(u);
 		generadorIdUsuario++;
-	}
+	}*/
 
 	public Persona buscarPersona(String id) {
 		Persona aux = null;
@@ -99,7 +99,7 @@ public class BolsaLaboral {
 		return aux;
 	}
 
-	public Usuario buscarUsuario(String username) {
+	/*public Usuario buscarUsuario(String username) {
 		Usuario aux = null;
 		int i = 0;
 		boolean encontrado = false;
@@ -111,7 +111,7 @@ public class BolsaLaboral {
 			i++;
 		}
 		return aux;
-	}
+	}*/
 
 	public Solicitud buscarSolicitud(String codigo) {
 		Solicitud aux = null;
@@ -151,15 +151,21 @@ public class BolsaLaboral {
 	public ArrayList<Empresa> getLasEmpresas() { return lasEmpresas; }
 	public ArrayList<Oferta> getLasOfertas() { return lasOfertas; }
 	public ArrayList<Solicitud> getLasSolicitudes() { return lasSolicitudes; }
-	public ArrayList<Usuario> getLosUsuarios() { return losUsuarios; }
+//	public ArrayList<Usuario> getLosUsuarios() { return losUsuarios; }
 
 	public ArrayList<ResultadoMatcheo> matcheoCandidatosParaOferta(Oferta oferta) {
 		ArrayList<ResultadoMatcheo> resultados = new ArrayList<>();
 
 		for (Solicitud solicitud : lasSolicitudes) {
+			
+			if (!solicitud.getSolicitante().isDisponible()) continue;
+			if (solicitud.getEstado().equalsIgnoreCase("hold")) continue;
+			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
+			
 			int puntos = 0;
 			float total = 6;
-
+			
+			
 			if (solicitud.getSolicitante() instanceof Universitario && 
 					oferta.getTipo().equalsIgnoreCase("universitario")) puntos++;
 			else if (solicitud.getSolicitante() instanceof Tecnico && 
@@ -210,7 +216,8 @@ public class BolsaLaboral {
 
 	public void contratarCandidato(Oferta oferta, Solicitud solicitudContratada){
 		Persona persona = solicitudContratada.getSolicitante();
-		persona.setEmpleada(true);
+		persona.setDisponible(false);
+		solicitudContratada.setEstado("completada");
 		oferta.setCantidadPuestos(oferta.getCantidadPuestos() - 1);
 		if (oferta.getCantidadPuestos() == 0) {
 			oferta.setActiva(false);
@@ -222,7 +229,7 @@ public class BolsaLaboral {
 		}
 	}
 
-	public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
+	/*public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
 		String correo = empresa.getCorreo();
 		String username = correo.substring(0, correo.indexOf("@"));
 		String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));
@@ -230,7 +237,7 @@ public class BolsaLaboral {
 		Usuario u = new Usuario(id, username, password, empresa, null, true);
 		registrarUsuario(u);
 		return u;
-	}
+	}*/
 
 //	public Usuario crearUsuarioDesdePersona(Persona persona) {
 //		String correo = persona.getEmail();
