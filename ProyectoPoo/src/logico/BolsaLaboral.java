@@ -1,14 +1,17 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.io.*;
 
-public class BolsaLaboral {
+public class BolsaLaboral implements Serializable{
 
 	private ArrayList<Persona> losPersonal;
 	private ArrayList<Empresa> lasEmpresas;
 	private ArrayList<Oferta> lasOfertas;
-	private ArrayList<Solicitud> lasSolicitudes;
+	private ArrayList<Solicitud> lasSolicitudes;	
 //	private ArrayList<Usuario> losUsuarios;
+	private static final long serialVersionUID = 1L;
 
 
 	public static int generadorIdSolicitud = 1;
@@ -228,7 +231,73 @@ public class BolsaLaboral {
 			}
 		}
 	}
+	
+	public void FotoPerfil(File archivoOrigen, Persona persona) {
+        File carpeta = new File("fotos");
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();  
+        }
+ 
+        String ruta = "fotos/" + persona.getId() + ".jpg";
+        File archivoSalida = new File(ruta);
 
+        try {
+            FileInputStream lector = new FileInputStream(archivoOrigen);
+            FileOutputStream escritor = new FileOutputStream(archivoSalida);
+
+            int unByte;
+            while ((unByte = lector.read()) != -1) {
+                escritor.write(unByte);
+            }
+            lector.close();
+            escritor.close();
+            
+            persona.setRutaFotoPerfil(ruta);
+            
+            System.out.println("La foto ha sido copiada con éxito a: " + ruta);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	public void guardarMemoria() {
+        File archivo = new File("BolsaData.dat"); 
+        
+        try {
+            FileOutputStream file = new FileOutputStream(archivo);
+            ObjectOutputStream oos = new ObjectOutputStream(file); 
+            oos.writeObject(this); 
+            oos.close();
+            file.close();
+            System.out.println("Sistema guardado correctamente.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar: " + e.getMessage());
+        }
+    }
+
+	public static BolsaLaboral sacarMemoria() {
+        File archivo = new File("BolsaData.dat");
+        
+        if (archivo.exists()) {
+            try
+            {
+                FileInputStream file = new FileInputStream(archivo);
+                ObjectInputStream ois = new ObjectInputStream(file); 
+                BolsaLaboral datosBolsa = (BolsaLaboral) ois.readObject(); 
+                ois.close();
+                file.close(); 
+                BolsaLaboral.instancia = datosBolsa;
+                System.out.println("Sistema cargado con exito.");
+                return datosBolsa;
+                
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Error al cargar.");
+            }
+        }
+        
+        return BolsaLaboral.getInstancia();
+    }
+}
 	/*public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
 		String correo = empresa.getCorreo();
 		String username = correo.substring(0, correo.indexOf("@"));
@@ -249,4 +318,4 @@ public class BolsaLaboral {
 //		return u;
 //	}
 
-}
+

@@ -1,6 +1,8 @@
 package logico;
 
-public class Persona {
+import java.io.Serializable;
+
+public class Persona implements Serializable{
     private String id;
     private String usuario;
     private String contrasena;
@@ -11,6 +13,10 @@ public class Persona {
     private String provincia;
     private String sexo;
     private boolean tieneLicencia;
+    private int aniosExperiencia;
+    
+    private static final long serialVersionUID = 1L;
+    private String rutaFotoPerfil;
 
     public Persona(String id, String usuario, String contrasena, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia) {
         this.id = id;
@@ -23,6 +29,7 @@ public class Persona {
         this.provincia = provincia;
         this.sexo = sexo;
         this.tieneLicencia = tieneLicencia;
+        this.rutaFotoPerfil = "fotos/default.png";
     }
 
     public String getId() { return id; }
@@ -54,4 +61,10 @@ public class Persona {
 
     public boolean isTieneLicencia() { return tieneLicencia; }
     public void setTieneLicencia(boolean tieneLicencia) { this.tieneLicencia = tieneLicencia; }
+
+    public int aniosExperiencia() { return aniosExperiencia; }
+    public void aniosExperiencia(int aniosExperiencia) { this.aniosExperiencia = aniosExperiencia; }
+    
+    public String getRutaFotoPerfil() { return rutaFotoPerfil; }
+    public void setRutaFotoPerfil(String rutaFotoPerfil) { this.rutaFotoPerfil = rutaFotoPerfil; }
 }
