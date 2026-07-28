@@ -236,12 +236,15 @@ public class RegPersona extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed (ActionEvent e) {
 						
+
 						Persona persona = crearPersona();
+						if(persona!=null)
+						{
+							BolsaLaboral.getInstancia().registrarPersona(persona);
 
-				        BolsaLaboral.getInstancia().registrarPersona(persona);
-
-				        JOptionPane.showMessageDialog(null,
-				                "Persona registrada correctamente");
+							JOptionPane.showMessageDialog(null,
+									"Persona registrada correctamente");
+						}
 				        
 				        clear();
 					}
@@ -289,6 +292,13 @@ public class RegPersona extends JDialog {
 	}
 	private Persona crearPersona()
 	{
+		if(!camposCompletos())
+		{
+			JOptionPane.showMessageDialog(this, "Debe completar todos los campos", 
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+			
+			return null;
+		}
 		String nivel = comboBoxAcademico.getSelectedItem().toString();
 		Persona person= null;
 		String id=txtId.getText();
@@ -324,5 +334,17 @@ public class RegPersona extends JDialog {
 	    
 	    return person;
 	    
+	}
+	public boolean camposCompletos () {
+		
+		return !txtId.getText().trim().isEmpty()
+		&& !txtUserName.getText().trim().isEmpty()
+		&& !txtEmail.getText().trim().isEmpty()
+		&& !txtPassword.getText().isEmpty()
+		&& !txtTelefono.getText().trim().isEmpty()
+		&& !txtDireccion.getText().trim().isEmpty();
+		
+		
+		
 	}
 }
