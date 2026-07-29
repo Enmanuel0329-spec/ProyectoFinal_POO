@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import logico.Persona;
 import logico.Tecnico;
 import logico.Universitario;
+import logico.Usuario;
 import logico.Obrero;
 import logico.BolsaLaboral;
 import logico.Empresa;
@@ -51,6 +52,7 @@ public class RegEmpresa extends JDialog {
 	public RegEmpresa() {
 		setTitle("Registrar Empresa");
 		setBounds(100, 100, 679, 537);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -142,13 +144,16 @@ public class RegEmpresa extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					
 					
-					Empresa empresa= crearEmpresa();
-					if(empresa!=null)
-					{
-						BolsaLaboral.getInstancia().registrarEmpresa(empresa);
-						JOptionPane.showMessageDialog(null,"Empresa registrada correctamente");
-					}
-					clear();
+					Empresa empresa = crearEmpresa();
+			        if (empresa != null) {
+			            BolsaLaboral.getInstancia().registrarEmpresa(empresa);
+			            Usuario usuarioGenerado = BolsaLaboral.getInstancia().crearUsuarioDesdeEmpresa(empresa);
+			            JOptionPane.showMessageDialog(null,
+			                    "Empresa registrada correctamente.\n" +
+			                    "Su usuario es: " + usuarioGenerado.getUsername() + "\n" +
+			                    "Su contrasena es: " + usuarioGenerado.getPassword());
+			        }
+			        clear();
 					
 				}			
 			});
@@ -179,6 +184,24 @@ public class RegEmpresa extends JDialog {
 		String direccion= txtDireccion.getText();
 		String email= txtEmail.getText();
 		String tipo= txtTipo.getText();
+		
+		if (!email.contains("@")) {
+	        JOptionPane.showMessageDialog(this, "El correo debe contener un @ valido.", 
+	                "Correo invalido", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
+	    
+	    if (BolsaLaboral.getInstancia().buscarEmpresa(rnc) != null) {
+	        JOptionPane.showMessageDialog(this, "Ya existe una empresa registrada con ese RNC.", 
+	                "RNC duplicado", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
+	    
+	    if (BolsaLaboral.getInstancia().existeCorreo(email)) {
+	        JOptionPane.showMessageDialog(this, "Ya existe un usuario registrado con ese correo.", 
+	                "Correo duplicado", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
 		
 		e= new Empresa(rnc,nombre,representante,direccion,telefono,email, tipo);
 		

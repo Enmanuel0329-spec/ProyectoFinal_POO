@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 public abstract class Persona implements Serializable{
     private String id;
-    private String usuario;
-    private String contrasena;
+    private String nombre;
     private String email;
     private String telefono;
     private boolean disponible;
@@ -18,10 +17,9 @@ public abstract class Persona implements Serializable{
     private static final long serialVersionUID = 1L;
     private String rutaFotoPerfil;
 
-    public Persona(String id, String usuario, String contrasena, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia) {
+    public Persona(String id, String nombre, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia) {
         this.id = id;
-        this.usuario = usuario;
-        this.contrasena = contrasena;
+        this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
         this.disponible = disponible;
@@ -34,12 +32,6 @@ public abstract class Persona implements Serializable{
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-
-    public String getUsuario() { return usuario; }
-    public void setUsuario(String usuario) { this.usuario = usuario; }
-
-    public String getContrasena() { return contrasena; }
-    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -67,6 +59,7 @@ public abstract class Persona implements Serializable{
     
     public String getRutaFotoPerfil() { return rutaFotoPerfil; }
     public void setRutaFotoPerfil(String rutaFotoPerfil) { this.rutaFotoPerfil = rutaFotoPerfil; }
-    
     public abstract String getCualificacion();
+	public String getNombre() {return nombre;}
+	public void setNombre(String nombre) {this.nombre = nombre;}
 }

@@ -40,14 +40,14 @@ import javax.swing.SwingConstants;
 import logico.Persona;
 import logico.Tecnico;
 import logico.Universitario;
+import logico.Usuario;
 import logico.Obrero;
 import logico.BolsaLaboral;
 public class RegPersona extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtUserName;
+	private JTextField txtName;
 	private JTextField txtEmail;
-	private JTextField txtPassword;
 	private JTextField txtTelefono;
 	private JTextField txtDireccion;
 	private JLabel lblAcedemico;
@@ -77,7 +77,8 @@ public class RegPersona extends JDialog {
 	 */
 	public RegPersona() {
 		setTitle(" Registrar Persona");
-		setBounds(100, 100, 554, 619);
+		setBounds(100, 100, 554, 503);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -85,21 +86,21 @@ public class RegPersona extends JDialog {
 		{
 			JPanel panelngresos = new JPanel();
 			panelngresos.setToolTipText("");
-			panelngresos.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos de ingreso", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panelngresos.setBounds(15, 13, 509, 216);
+			panelngresos.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Personales", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			panelngresos.setBounds(15, 13, 509, 149);
 			contentPanel.add(panelngresos);
 			panelngresos.setLayout(null);
 			{
-				JLabel lblUser = new JLabel("Nombre de usuario:");
+				JLabel lblUser = new JLabel("Nombre:");
 				lblUser.setBounds(23, 11, 170, 16);
 				panelngresos.add(lblUser);
 			}
-			
-			txtUserName = new JTextField();
-			txtUserName.setText("");
-			txtUserName.setBounds(23, 40, 281, 22);
-			panelngresos.add(txtUserName);
-			txtUserName.setColumns(10);
+
+			txtName = new JTextField();
+			txtName.setText("");
+			txtName.setBounds(23, 40, 281, 22);
+			panelngresos.add(txtName);
+			txtName.setColumns(10);
 			{
 				JLabel lblEmail = new JLabel("Email: ");
 				lblEmail.setBounds(23, 75, 106, 16);
@@ -111,18 +112,7 @@ public class RegPersona extends JDialog {
 				panelngresos.add(txtEmail);
 				txtEmail.setColumns(10);
 			}
-			{
-				JLabel lblNewLabel = new JLabel("Contrase\u00F1a: ");
-				lblNewLabel.setBounds(23, 141, 80, 16);
-				panelngresos.add(lblNewLabel);
-			}
-			{
-				txtPassword = new JTextField();
-				txtPassword.setBounds(23, 170, 281, 22);
-				panelngresos.add(txtPassword);
-				txtPassword.setColumns(10);
-			}
-			
+
 			txtId = new JTextField();
 			txtId.setEditable(false);
 			txtId.setBounds(420, 8, 89, 22);
@@ -133,7 +123,7 @@ public class RegPersona extends JDialog {
 		{
 			JPanel panelGenerales = new JPanel();
 			panelGenerales.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos generales", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panelGenerales.setBounds(15, 242, 509, 200);
+			panelGenerales.setBounds(15, 170, 509, 200);
 			contentPanel.add(panelGenerales);
 			panelGenerales.setLayout(null);
 			{
@@ -163,7 +153,7 @@ public class RegPersona extends JDialog {
 				lblSexo.setBounds(316, 13, 73, 16);
 				panelGenerales.add(lblSexo);
 			}
-			
+
 			comboBoxSexo = new JComboBox();
 			comboBoxSexo.setModel(new DefaultComboBoxModel(new String[] {"Femenino ", "Masculino"}));
 			comboBoxSexo.setToolTipText("");
@@ -181,7 +171,7 @@ public class RegPersona extends JDialog {
 				comboBoxProvincia.setBounds(316, 102, 135, 22);
 				panelGenerales.add(comboBoxProvincia);
 			}
-			
+
 			CheckBoxLicencia = new JCheckBox("");
 			CheckBoxLicencia.setVerticalAlignment(SwingConstants.TOP);
 			CheckBoxLicencia.setHorizontalAlignment(SwingConstants.LEFT);
@@ -193,10 +183,10 @@ public class RegPersona extends JDialog {
 				panelGenerales.add(lblLicencia);
 			}
 		}
-		
+
 		JPanel panelProfesional = new JPanel();
 		panelProfesional.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos profesionales", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelProfesional.setBounds(15, 448, 509, 71);
+		panelProfesional.setBounds(15, 380, 509, 71);
 		contentPanel.add(panelProfesional);
 		panelProfesional.setLayout(null);
 		{
@@ -209,20 +199,20 @@ public class RegPersona extends JDialog {
 			lblAcademico.setBounds(26, 23, 97, 16);
 			panelProfesional.add(lblAcademico);
 		}
-		
+
 		comboBoxAcademico = new JComboBox();
 		comboBoxAcademico.setModel(new DefaultComboBoxModel(new String[] {"Tecnico", "Universitario", "Obrero"}));
 		comboBoxAcademico.setBounds(135, 23, 107, 22);
 		panelProfesional.add(comboBoxAcademico);
-		
+
 		lblDatoProfesional=new JLabel("Especialidad: ");
 		lblDatoProfesional.setBounds(254, 26, 84, 16);
 		panelProfesional.add(lblDatoProfesional);
-		
+
 		txtDatoProfesional = new JTextField();
 		txtDatoProfesional.setBounds(339, 23, 136, 22);
 		panelProfesional.add(txtDatoProfesional);
-		
+
 		comboBoxAcademico.addActionListener(e -> actualizarCampoProfesional());
 		txtDatoProfesional.setColumns(10);
 		{
@@ -235,18 +225,20 @@ public class RegPersona extends JDialog {
 				okButton.setActionCommand("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed (ActionEvent e) {
-						
+
 
 						Persona persona = crearPersona();
 						if(persona!=null)
 						{
 							BolsaLaboral.getInstancia().registrarPersona(persona);
-
+							Usuario usuarioGenerado = BolsaLaboral.getInstancia().crearUsuarioDesdePersona(persona);
 							JOptionPane.showMessageDialog(null,
-									"Persona registrada correctamente");
+									"Persona registrada correctamente.\n" +
+											"Su usuario es: " + usuarioGenerado.getUsername() + "\n" +
+											"Su contrasena es: " + usuarioGenerado.getPassword());
 						}
-				        
-				        clear();
+
+						clear();
 					}
 				});
 				buttonPane.add(okButton);
@@ -277,18 +269,17 @@ public class RegPersona extends JDialog {
 	}
 	private void clear() {
 
-	    txtId.setText("P-" + BolsaLaboral.generadorIdPersona);
-	    txtUserName.setText("");
-	    txtEmail.setText("");
-	    txtPassword.setText("");
-	    txtTelefono.setText("");
-	    txtDireccion.setText("");
-	    txtDatoProfesional.setText("");
+		txtId.setText("P-" + BolsaLaboral.generadorIdPersona);
+		txtName.setText("");
+		txtEmail.setText("");
+		txtTelefono.setText("");
+		txtDireccion.setText("");
+		txtDatoProfesional.setText("");
 
-	    comboBoxSexo.setSelectedIndex(0);
-	    comboBoxProvincia.setSelectedIndex(0);
-	    comboBoxAcademico.setSelectedIndex(0);
-	    CheckBoxLicencia.setSelected(false);
+		comboBoxSexo.setSelectedIndex(0);
+		comboBoxProvincia.setSelectedIndex(0);
+		comboBoxAcademico.setSelectedIndex(0);
+		CheckBoxLicencia.setSelected(false);
 	}
 	private Persona crearPersona()
 	{
@@ -296,55 +287,67 @@ public class RegPersona extends JDialog {
 		{
 			JOptionPane.showMessageDialog(this, "Debe completar todos los campos", 
 					"Advertencia", JOptionPane.WARNING_MESSAGE);
-			
+
 			return null;
 		}
+		
+		String email=txtEmail.getText();
+		
+		if (!email.contains("@")) {
+	        JOptionPane.showMessageDialog(this, "El correo debe contener un @ valido.", 
+	                "Correo invalido", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
+	    
+	    if (BolsaLaboral.getInstancia().existeCorreo(email)) {
+	        JOptionPane.showMessageDialog(this, "Ya existe un usuario registrado con ese correo.", 
+	                "Correo duplicado", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
+	    
 		String nivel = comboBoxAcademico.getSelectedItem().toString();
 		Persona person= null;
 		String id=txtId.getText();
-		String username= txtUserName.getText();
-		String email=txtEmail.getText();
-		String password=txtPassword.getText();
+		String username= txtName.getText();
 		String telefono=txtTelefono.getText();
 		String direccion=txtDireccion.getText();
-	    String sexo = comboBoxSexo.getSelectedItem().toString();
-	    String provincia = comboBoxProvincia.getSelectedItem().toString();
-	    boolean licencia = CheckBoxLicencia.isSelected();
-	    String datoProfesional = txtDatoProfesional.getText();
-	    
-	    if(nivel.equals("Universitario"))
-	    {
-	    	  person = new Universitario(id, username, password, email,
-	    			  telefono, true, direccion, provincia, sexo, licencia, datoProfesional);
-	    }
-	    else if (nivel.equals("Tecnico"))
-	    {
-	    	
-	    	 person = new Tecnico(id, username, password, 
-	    			 email, telefono, true, direccion, provincia, sexo, licencia, datoProfesional);
-	    }
-	    else if (nivel.equals("Obrero"))
-	    {
-	    	Obrero obrero = new Obrero(id, username, password, email, telefono,
-	                true, direccion, provincia, sexo, licencia);
-	        obrero.getHabilidades().add(datoProfesional);
+		String sexo = comboBoxSexo.getSelectedItem().toString();
+		String provincia = comboBoxProvincia.getSelectedItem().toString();
+		boolean licencia = CheckBoxLicencia.isSelected();
+		String datoProfesional = txtDatoProfesional.getText();
 
-	        person = obrero;
-	    }
-	    
-	    return person;
-	    
+		if(nivel.equals("Universitario"))
+		{
+			person = new Universitario(id, username, email,
+					telefono, true, direccion, provincia, sexo, licencia, datoProfesional);
+		}
+		else if (nivel.equals("Tecnico"))
+		{
+
+			person = new Tecnico(id, username, 
+					email, telefono, true, direccion, provincia, sexo, licencia, datoProfesional);
+		}
+		else if (nivel.equals("Obrero"))
+		{
+			Obrero obrero = new Obrero(id, username, email, telefono,
+					true, direccion, provincia, sexo, licencia);
+			obrero.getHabilidades().add(datoProfesional);
+
+			person = obrero;
+		}
+
+		return person;
+
 	}
 	public boolean camposCompletos () {
-		
+
 		return !txtId.getText().trim().isEmpty()
-		&& !txtUserName.getText().trim().isEmpty()
-		&& !txtEmail.getText().trim().isEmpty()
-		&& !txtPassword.getText().isEmpty()
-		&& !txtTelefono.getText().trim().isEmpty()
-		&& !txtDireccion.getText().trim().isEmpty();
-		
-		
-		
+				&& !txtName.getText().trim().isEmpty()
+				&& !txtEmail.getText().trim().isEmpty()
+				&& !txtTelefono.getText().trim().isEmpty()
+				&& !txtDireccion.getText().trim().isEmpty();
+
+
+
 	}
 }

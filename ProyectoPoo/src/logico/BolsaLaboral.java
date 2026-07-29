@@ -386,6 +386,25 @@ public class BolsaLaboral implements Serializable{
 	    return u;
 	}
 
+	public boolean existeCorreo(String correo) {
+	    boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < lasPersonas.size()) {
+	        if (lasPersonas.get(i).getEmail().equalsIgnoreCase(correo)) {
+	            encontrado = true;
+	        }
+	        i++;
+	    }
+	    int j = 0;
+	    while (!encontrado && j < lasEmpresas.size()) {
+	        if (lasEmpresas.get(j).getCorreo().equalsIgnoreCase(correo)) {
+	            encontrado = true;
+	        }
+	        j++;
+	    }
+	    return encontrado;
+	}
+	
 }
 
 

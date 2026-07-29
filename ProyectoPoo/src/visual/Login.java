@@ -8,7 +8,12 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.BolsaLaboral;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -93,6 +98,29 @@ public class Login extends JDialog {
 			panel.add(lblContrasea);
 
 			btnLogin = new JButton("Ingresar");
+			btnLogin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String usuario = txtUsuario.getText();
+					String contrasena = new String(txtContrasena.getPassword());
+
+					if (usuario.trim().isEmpty() || contrasena.trim().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Completa usuario y contrasena.",
+								"Campos vacios", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+
+					Object usuarioAutenticado = BolsaLaboral.getInstancia().autenticar(usuario, contrasena);
+
+					if (usuarioAutenticado == null) {
+						JOptionPane.showMessageDialog(null, "Usuario o contrasena incorrectos.",
+								"Error de login", JOptionPane.ERROR_MESSAGE);
+					} else {
+						dispose();
+						Principal principal = new Principal(usuarioAutenticado);
+						principal.setVisible(true);
+					}
+				}
+			});
 			btnLogin.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 14));
 			btnLogin.setForeground(new Color(245, 245, 245));
 			btnLogin.setBackground(new Color(30, 144, 255));
@@ -113,6 +141,9 @@ public class Login extends JDialog {
 			btnRegCandidato = new JButton("<html>Busco<br>Trabajo</html>");
 			btnRegCandidato.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					RegPersona reg = new RegPersona();
+			        reg.setModal(true);
+			        reg.setVisible(true);
 				}
 			});
 			btnRegCandidato.setForeground(new Color(25, 25, 112));
@@ -124,6 +155,9 @@ public class Login extends JDialog {
 			btnRegEmpresa = new JButton("<html>Busco<br>Empleados</html>");
 			btnRegEmpresa.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					RegEmpresa reg = new RegEmpresa();
+			        reg.setModal(true);
+			        reg.setVisible(true);
 				}
 			});
 			btnRegEmpresa.setForeground(new Color(25, 25, 112));

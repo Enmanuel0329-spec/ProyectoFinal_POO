@@ -6,10 +6,10 @@ public class Tecnico extends Persona implements Serializable{
     private String especialidad;
     private static final long serialVersionUID = 1L;
 
-    public Tecnico(String id, String usuario, String contrasena, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia, 
+    public Tecnico(String id, String nombre, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia, 
                    String especialidad) {
         
-        super(id, usuario, contrasena, email, telefono, disponible, direccion, provincia, sexo, tieneLicencia);
+        super(id, nombre, email, telefono, disponible, direccion, provincia, sexo, tieneLicencia);
         this.especialidad = especialidad;
     }
 

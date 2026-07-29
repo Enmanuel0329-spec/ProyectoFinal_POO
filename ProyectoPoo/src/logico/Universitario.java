@@ -6,9 +6,9 @@ public class Universitario extends Persona implements Serializable{
     private String titulo;
     private static final long serialVersionUID = 1L;
 
-    public Universitario(String id, String usuario, String contrasena, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia,String titulo) {
+    public Universitario(String id, String nombre, String email, String telefono, boolean disponible, String direccion, String provincia, String sexo, boolean tieneLicencia,String titulo) {
         
-        super(id, usuario, contrasena, email, telefono, disponible, direccion, provincia, sexo, tieneLicencia);
+        super(id, nombre, email, telefono, disponible, direccion, provincia, sexo, tieneLicencia);
         this.titulo = titulo;
     }
 

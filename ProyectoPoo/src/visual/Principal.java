@@ -113,6 +113,14 @@ public class Principal extends JFrame {
         mnCatlogoDeOfertas.add(mntmCatConsultar);
         
         mntmCatRegistrar = new JMenuItem("Registrar");
+        mntmCatRegistrar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Empresa empresaActual = (Empresa) usuarioLogueado;
+                RegOferta reg = new RegOferta(empresaActual);
+                reg.setModal(true);
+                reg.setVisible(true);
+        	}
+        });
         mntmCatRegistrar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCatlogoDeOfertas.add(mntmCatRegistrar);
 
