@@ -23,7 +23,7 @@ public class SocketServer extends Thread {
             try 
             {
                 Socket nsfd = sfd.accept();
-                System.out.println("Conexión entrante aceptada desde: " + nsfd.getInetAddress());
+                System.out.println("Conexion entrante aceptada desde: " + nsfd.getInetAddress());
                 DataInputStream ois = new DataInputStream(nsfd.getInputStream());
                 File archivoRespaldo = new File("SaveNube.dat");
                 FileOutputStream fos = new FileOutputStream(archivoRespaldo);
