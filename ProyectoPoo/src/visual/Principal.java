@@ -104,7 +104,7 @@ public class Principal extends JFrame {
         mntmCandRegistrar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCandidatos.add(mntmCandRegistrar);
         
-        mnCatlogoDeOfertas = new JMenu("Catálogo de Ofertas");
+        mnCatlogoDeOfertas = new JMenu("Catalogo de Ofertas");
         mnCatlogoDeOfertas.setFont(new Font("Arial Narrow", Font.BOLD, 15));
         menuBar.add(mnCatlogoDeOfertas);
         
