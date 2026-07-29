@@ -50,6 +50,10 @@ public class BolsaLaboral implements Serializable{
 		generadorIdOferta++;
 	}
 
+	public void eliminarOferta(Oferta o) {
+		lasOfertas.remove(o);
+	}
+
 	public void registrarSolicitud(Solicitud s) {
 		lasSolicitudes.add(s);
 		generadorIdSolicitud++;
@@ -194,7 +198,10 @@ public class BolsaLaboral implements Serializable{
 				puntos++;
 			}
 
-			if (solicitud.getSolicitante().getProvincia().equalsIgnoreCase(oferta.getProvincia())) puntos++;
+			if (oferta.getModalidad().equalsIgnoreCase("remoto") ||
+					solicitud.getSolicitante().getProvincia().equalsIgnoreCase(oferta.getProvincia())) {
+				puntos++;
+			}
 
 			String[] palabrasOferta = oferta.getDescripcionPuesto().toLowerCase().split(" ");
 			String[] palabrasSolicitud = solicitud.getCargoDeseado().toLowerCase().split(" ");
@@ -300,32 +307,32 @@ public class BolsaLaboral implements Serializable{
 	}
 
 	private Usuario buscarUsuarioPorCredenciales(String username, String password) {
-	    Usuario aux = null;
-	    int i = 0;
-	    boolean encontrado = false;
-	    while (!encontrado && i < losUsuarios.size()) {
-	        if (losUsuarios.get(i).getUsername().equalsIgnoreCase(username) &&
-	                losUsuarios.get(i).getPassword().equals(password)) {
-	            aux = losUsuarios.get(i);
-	            encontrado = true;
-	        }
-	        i++;
-	    }
-	    return aux;
+		Usuario aux = null;
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < losUsuarios.size()) {
+			if (losUsuarios.get(i).getUsername().equalsIgnoreCase(username) &&
+					losUsuarios.get(i).getPassword().equals(password)) {
+				aux = losUsuarios.get(i);
+				encontrado = true;
+			}
+			i++;
+		}
+		return aux;
 	}
-	
+
 	public Object autenticar(String usuario, String contrasena) {
-	    Usuario u = buscarUsuarioPorCredenciales(usuario, contrasena);
+		Usuario u = buscarUsuarioPorCredenciales(usuario, contrasena);
 
-	    if (u == null) {
-	        return null;
-	    }
+		if (u == null) {
+			return null;
+		}
 
-	    if (u.isEsEmpresa()) {
-	        return u.getEmpresa();
-	    } else {
-	        return u.getPersona();
-	    }
+		if (u.isEsEmpresa()) {
+			return u.getEmpresa();
+		} else {
+			return u.getPersona();
+		}
 	}
 
 	public void guardarMemoria() {
@@ -367,44 +374,44 @@ public class BolsaLaboral implements Serializable{
 	}
 
 	public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
-	    String correo = empresa.getCorreo();
-	    String username = correo.substring(0, correo.indexOf("@"));
-	    String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));
-	    String id = "U-" + generadorIdUsuario;
-	    Usuario u = new Usuario(id, username, password, empresa, null, true);
-	    registrarUsuario(u);
-	    return u;
+		String correo = empresa.getCorreo();
+		String username = correo.substring(0, correo.indexOf("@"));
+		String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));
+		String id = "U-" + generadorIdUsuario;
+		Usuario u = new Usuario(id, username, password, empresa, null, true);
+		registrarUsuario(u);
+		return u;
 	}
 
 	public Usuario crearUsuarioDesdePersona(Persona persona) {
-	    String correo = persona.getEmail();
-	    String username = correo.substring(0, correo.indexOf("@"));
-	    String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));
-	    String id = "U-" + generadorIdUsuario;
-	    Usuario u = new Usuario(id, username, password, null, persona, false);
-	    registrarUsuario(u);
-	    return u;
+		String correo = persona.getEmail();
+		String username = correo.substring(0, correo.indexOf("@"));
+		String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));
+		String id = "U-" + generadorIdUsuario;
+		Usuario u = new Usuario(id, username, password, null, persona, false);
+		registrarUsuario(u);
+		return u;
 	}
 
 	public boolean existeCorreo(String correo) {
-	    boolean encontrado = false;
-	    int i = 0;
-	    while (!encontrado && i < lasPersonas.size()) {
-	        if (lasPersonas.get(i).getEmail().equalsIgnoreCase(correo)) {
-	            encontrado = true;
-	        }
-	        i++;
-	    }
-	    int j = 0;
-	    while (!encontrado && j < lasEmpresas.size()) {
-	        if (lasEmpresas.get(j).getCorreo().equalsIgnoreCase(correo)) {
-	            encontrado = true;
-	        }
-	        j++;
-	    }
-	    return encontrado;
+		boolean encontrado = false;
+		int i = 0;
+		while (!encontrado && i < lasPersonas.size()) {
+			if (lasPersonas.get(i).getEmail().equalsIgnoreCase(correo)) {
+				encontrado = true;
+			}
+			i++;
+		}
+		int j = 0;
+		while (!encontrado && j < lasEmpresas.size()) {
+			if (lasEmpresas.get(j).getCorreo().equalsIgnoreCase(correo)) {
+				encontrado = true;
+			}
+			j++;
+		}
+		return encontrado;
 	}
-	
+
 }
 
 

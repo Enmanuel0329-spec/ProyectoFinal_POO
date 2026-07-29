@@ -109,6 +109,13 @@ public class Principal extends JFrame {
         menuBar.add(mnCatlogoDeOfertas);
         
         mntmCatConsultar = new JMenuItem("Consultar");
+        mntmCatConsultar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListarOfertas listarOfertas = new ListarOfertas(usuarioLogueado);
+        		listarOfertas.setModal(true);
+        		listarOfertas.setVisible(true);
+        	}
+        });
         mntmCatConsultar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCatlogoDeOfertas.add(mntmCatConsultar);
         
@@ -172,6 +179,7 @@ public class Principal extends JFrame {
         if (usuario instanceof Persona) {
             Persona candidato = (Persona) usuario;
             mnCentros.setVisible(false); 
+            mnCandidatos.setVisible(false);
             mntmCandRegistrar.setVisible(false); 
             mntmCandConsultar.setVisible(false); 
             mntmCatRegistrar.setVisible(false); 
@@ -187,6 +195,7 @@ public class Principal extends JFrame {
             }
             
         } else if (usuario instanceof Empresa) {
+        	mnCandidatos.setVisible(false);
             mntmCentRegistrar.setVisible(false); 
             mntmCandRegistrar.setVisible(false); 
             mnMisSolicitudes.setVisible(false); 
