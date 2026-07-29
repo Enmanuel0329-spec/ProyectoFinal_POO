@@ -260,6 +260,19 @@ public class BolsaLaboral implements Serializable{
             e.printStackTrace();
         }
     }
+	public void procesarRenuncia(Persona candidato) 
+	{
+		for (Solicitud solicitud : solicitudesPorPersona(candidato)) 
+		{ 
+			if (solicitud.getEstado().equalsIgnoreCase("completada")) 
+			{
+				solicitud.setEstado("renuncio");
+			}
+			else if (solicitud.getEstado().equalsIgnoreCase("hold")) 
+			{
+				solicitud.setEstado("activa");
+			}}}
+		
 	public void guardarMemoria() {
         File archivo = new File("BolsaData.dat"); 
         
