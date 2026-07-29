@@ -2,17 +2,17 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import javax.swing.JPasswordField;
+
+import logico.BolsaLaboral;
 
 public class Login extends JDialog {
 
@@ -31,11 +33,11 @@ public class Login extends JDialog {
 	private JButton btnRegEmpresa;
 	private JPasswordField txtContrasena;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
+		
 		try {
+			BolsaLaboral.sacarMemoria();
 			Login dialog = new Login();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -44,11 +46,9 @@ public class Login extends JDialog {
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	
 	public Login() {
-		setTitle("Inicia Sesion");
+		setTitle("Iniciar Sesion");
 		setIconImage(
 				Toolkit.getDefaultToolkit()
 				.getImage(Login.class.getResource("/resources/imagen_logo_pucmm.png"))
@@ -93,6 +93,34 @@ public class Login extends JDialog {
 			panel.add(lblContrasea);
 
 			btnLogin = new JButton("Ingresar");
+			btnLogin.addActionListener(new ActionListener() 
+			{
+				public void actionPerformed(ActionEvent e) 
+				{
+				  String user = txtUsuario.getText();
+			      String pass = String.valueOf(txtContrasena.getPassword());
+			      if(user.isEmpty() || pass.isEmpty()) 
+			      {
+			        JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Advertencia", JOptionPane.WARNING_MESSAGE);
+			        return; 
+			      }
+			      if (user.equals("Admin") && pass.equals("1111")) 
+			      {
+			         JOptionPane.showMessageDialog(null, "¡Bienvenido Administrador!", "Acceso Concedido", JOptionPane.INFORMATION_MESSAGE);
+			         Principal mainFrame = new Principal(null); 
+			         mainFrame.setVisible(true); dispose();
+			         return;
+			      }
+			      Object usuarioLogueado = BolsaLaboral.getInstancia().autenticar(user, pass);
+			      if (usuarioLogueado != null) 
+			      {
+			         Principal mainFrame = new Principal(usuarioLogueado);
+			         mainFrame.setVisible(true);  dispose(); 
+			            
+			      }else
+			      {
+			    	 JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+			      }}});
 			btnLogin.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 14));
 			btnLogin.setForeground(new Color(245, 245, 245));
 			btnLogin.setBackground(new Color(30, 144, 255));
@@ -122,16 +150,35 @@ public class Login extends JDialog {
 			panel.add(btnRegCandidato);
 
 			btnRegEmpresa = new JButton("<html>Busco<br>Empleados</html>");
-			btnRegEmpresa.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
+			btnRegEmpresa.addActionListener(new ActionListener() 
+			{
+				public void actionPerformed(ActionEvent e) 
+				{
+					RegPersona regPersona = new RegPersona();
+					regPersona.setModal(true);
+					regPersona.setVisible(true);
+				}});
+			btnRegCandidato.setForeground(new Color(25, 25, 112));
+			btnRegCandidato.setFont(new Font("Arial Narrow", Font.BOLD, 13));
+			btnRegCandidato.setBackground(new Color(255, 255, 255));
+			btnRegCandidato.setBounds(346, 380, 120, 54);
+			panel.add(btnRegCandidato);
+
+			btnRegEmpresa = new JButton("<html>Busco<br>Empleados</html>");
+			btnRegEmpresa.addActionListener(new ActionListener() 
+			{
+				public void actionPerformed(ActionEvent e) 
+				{
+					RegEmpresa regEmpresa = new RegEmpresa();
+					regEmpresa.setModal(true);
+					regEmpresa.setVisible(true);
+				}});
+			
 			btnRegEmpresa.setForeground(new Color(25, 25, 112));
 			btnRegEmpresa.setFont(new Font("Arial Narrow", Font.BOLD, 13));
 			btnRegEmpresa.setBackground(Color.WHITE);
 			btnRegEmpresa.setBounds(468, 380, 120, 54);
 			panel.add(btnRegEmpresa);
-
 			JLabel lblNewLabel_3 = new JLabel("New label");
 			lblNewLabel_3.setIcon(new ImageIcon(Login.class.getResource("/resources/imagen_login.jpg")));
 			lblNewLabel_3.setBounds(28, 23, 300, 411);
