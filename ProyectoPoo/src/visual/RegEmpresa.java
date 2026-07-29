@@ -89,46 +89,46 @@ public class RegEmpresa extends JDialog {
 		panelGenerales.add(txtInstitucion);
 		txtInstitucion.setColumns(10);
 		
-		JPanel panelAdmin = new JPanel();
-		panelAdmin.setLayout(null);
-		panelAdmin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Admin.", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelAdmin.setBounds(26, 258, 609, 177);
-		contentPanel.add(panelAdmin);
+		JPanel panelRepresentante = new JPanel();
+		panelRepresentante.setLayout(null);
+		panelRepresentante.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Representante.", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelRepresentante.setBounds(26, 258, 609, 177);
+		contentPanel.add(panelRepresentante);
 		
 		JLabel lblEmail = new JLabel("Email: ");
 		lblEmail.setBounds(348, 34, 99, 16);
-		panelAdmin.add(lblEmail);
+		panelRepresentante.add(lblEmail);
 		
 		JLabel lblTelefono = new JLabel("Telefono:");
 		lblTelefono.setBounds(21, 34, 56, 16);
-		panelAdmin.add(lblTelefono);
+		panelRepresentante.add(lblTelefono);
 		
 		JLabel lblDireccion = new JLabel("Direccion: ");
 		lblDireccion.setBounds(21, 76, 61, 16);
-		panelAdmin.add(lblDireccion);
+		panelRepresentante.add(lblDireccion);
 		
 		txtEmail = new JTextField();
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(401, 31, 183, 22);
-		panelAdmin.add(txtEmail);
+		panelRepresentante.add(txtEmail);
 		
 		txtDireccion = new JTextField();
 		txtDireccion.setColumns(10);
 		txtDireccion.setBounds(150, 73, 178, 22);
-		panelAdmin.add(txtDireccion);
+		panelRepresentante.add(txtDireccion);
 		
 		txtTelefono = new JTextField();
 		txtTelefono.setColumns(10);
 		txtTelefono.setBounds(149, 31, 178, 22);
-		panelAdmin.add(txtTelefono);
+		panelRepresentante.add(txtTelefono);
 		
 		JLabel lblTipo = new JLabel("Sector empresarial:");
 		lblTipo.setBounds(21, 123, 140, 16);
-		panelAdmin.add(lblTipo);
+		panelRepresentante.add(lblTipo);
 		
 		txtTipo = new JTextField();
 		txtTipo.setBounds(150, 120, 178, 22);
-		panelAdmin.add(txtTipo);
+		panelRepresentante.add(txtTipo);
 		txtTipo.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
@@ -158,6 +158,14 @@ public class RegEmpresa extends JDialog {
 			{
 				JButton cancelButton = new JButton("Cancelar");
 				cancelButton.setActionCommand("Cancel");
+				cancelButton.addActionListener(new ActionListener() 
+				{
+				    public void actionPerformed(ActionEvent e) 
+				    { 
+				        cancelButton.setEnabled(false);
+				        dispose();
+				    }
+				});
 				buttonPane.add(cancelButton);
 			}
 		}
