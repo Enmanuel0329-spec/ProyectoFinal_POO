@@ -25,7 +25,7 @@ public class main {
         bolsa.registrarPersona(tec); 
         Solicitud solMaria = new Solicitud("SOL-1", uni, "Tecnologia", "Desarrollador", "Tiempo Completo", 40000f, 70000f, false);
         bolsa.registrarSolicitud(solMaria);
-        Solicitud solCarlos = new Solicitud("SOL-2", tec, "Tecnologia", "Soporte", "Medio Tiempo", 20000f, 30000f, true);
+        Solicitud solCarlos = new Solicitud("SOL-2", tec, "Tecnologia", "Desarrollador de Soporte", "Medio Tiempo", 20000f, 30000f, true);
         bolsa.registrarSolicitud(solCarlos);
 
         System.out.println("==================================================");

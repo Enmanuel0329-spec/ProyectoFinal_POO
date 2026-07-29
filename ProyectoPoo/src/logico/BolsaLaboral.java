@@ -164,11 +164,11 @@ public class BolsaLaboral implements Serializable{
 			if (!solicitud.getSolicitante().isDisponible()) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("hold")) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
-
+			if (!solicitud.getArea().equalsIgnoreCase(oferta.getArea())) continue;
+			
 			int puntos = 0;
-			float total = 8;
-			boolean coincideCualificacion = false;
-
+			float total = 7;
+			boolean coincidePuesto = false;
 
 			if (solicitud.getSolicitante() instanceof Universitario && 
 					oferta.getTipo().equalsIgnoreCase("universitario")) puntos++;
@@ -184,8 +184,6 @@ public class BolsaLaboral implements Serializable{
 			    puntos++;
 			}
 			
-			if (solicitud.getArea().equalsIgnoreCase(oferta.getArea())) puntos++;
-
 			if (!oferta.isRequiereLicencia() ||
 					solicitud.getSolicitante().isTieneLicencia()) {
 				puntos++;
@@ -198,24 +196,23 @@ public class BolsaLaboral implements Serializable{
 
 			if (solicitud.getSolicitante().getProvincia().equalsIgnoreCase(oferta.getProvincia())) puntos++;
 
-			if (solicitud.getSolicitante() instanceof Obrero) {
-				Obrero obrero = (Obrero) solicitud.getSolicitante();
-				int j = 0;
-				boolean encontrado = false;
-				while (!encontrado && j < obrero.getHabilidades().size()) {
-					if (obrero.getHabilidades().get(j).equalsIgnoreCase(oferta.getEspecialidad())) {
-						encontrado = true;
-					}
-					j++;
-				}
-				coincideCualificacion = encontrado;
-			} else {
-				coincideCualificacion = solicitud.getSolicitante().getCualificacion()
-						.equalsIgnoreCase(oferta.getEspecialidad());
+			String[] palabrasOferta = oferta.getDescripcionPuesto().toLowerCase().split(" ");
+			String[] palabrasSolicitud = solicitud.getCargoDeseado().toLowerCase().split(" ");
+
+			int a = 0;
+			while (!coincidePuesto && a < palabrasOferta.length) {
+			    int b = 0;
+			    while (!coincidePuesto && b < palabrasSolicitud.length) {
+			        if (palabrasOferta[a].equals(palabrasSolicitud[b]) && palabrasOferta[a].length() > 3) {
+			            coincidePuesto = true;
+			        }
+			        b++;
+			    }
+			    a++;
 			}
 
-			if (coincideCualificacion) puntos++;
-
+			if (coincidePuesto) puntos++;
+			
 			float porcentaje = (  (float)puntos / total) * 100;
 
 			if (porcentaje >= oferta.getPorcentajeMinimo()) {
