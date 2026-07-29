@@ -2,7 +2,7 @@ package logico;
 
 import java.io.Serializable;
 
-public class Persona implements Serializable{
+public abstract class Persona implements Serializable{
     private String id;
     private String usuario;
     private String contrasena;
@@ -67,4 +67,6 @@ public class Persona implements Serializable{
     
     public String getRutaFotoPerfil() { return rutaFotoPerfil; }
     public void setRutaFotoPerfil(String rutaFotoPerfil) { this.rutaFotoPerfil = rutaFotoPerfil; }
+    
+    public abstract String getCualificacion();
 }

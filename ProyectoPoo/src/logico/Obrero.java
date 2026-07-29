@@ -20,4 +20,17 @@ public class Obrero extends Persona implements Serializable{
     { 
     	this.habilidades = habilidades; 
     }
+    public String getCualificacion() {
+        String resultado = "";
+        int i = 0;
+        while (i < habilidades.size()) {
+            if (i == 0) {
+                resultado = habilidades.get(i);
+            } else {
+                resultado = resultado + ", " + habilidades.get(i);
+            }
+            i++;
+        }
+        return resultado;
+    }
 }
