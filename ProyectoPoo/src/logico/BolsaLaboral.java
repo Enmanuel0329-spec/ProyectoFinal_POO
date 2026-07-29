@@ -6,7 +6,7 @@ import java.io.*;
 
 public class BolsaLaboral implements Serializable{
 
-	private ArrayList<Persona> losPersonal;
+	private ArrayList<Persona> lasPersonas;
 	private ArrayList<Empresa> lasEmpresas;
 	private ArrayList<Oferta> lasOfertas;
 	private ArrayList<Solicitud> lasSolicitudes;	
@@ -23,7 +23,7 @@ public class BolsaLaboral implements Serializable{
 	private static BolsaLaboral instancia = null;
 
 	private BolsaLaboral() {
-		losPersonal = new ArrayList<>();
+		lasPersonas = new ArrayList<>();
 		lasEmpresas = new ArrayList<>();
 		lasOfertas = new ArrayList<>();
 //		losUsuarios = new ArrayList<>();
@@ -36,7 +36,7 @@ public class BolsaLaboral implements Serializable{
 	}
 
 	public void registrarPersona(Persona p) {
-		losPersonal.add(p);
+		lasPersonas.add(p);
 		generadorIdPersona++;
 	}
 
@@ -64,9 +64,9 @@ public class BolsaLaboral implements Serializable{
 		Persona aux = null;
 		int i = 0;
 		boolean encontrado = false;
-		while (!encontrado && i < losPersonal.size()) {
-			if (losPersonal.get(i).getId().equalsIgnoreCase(id)) {
-				aux = losPersonal.get(i);
+		while (!encontrado && i < lasPersonas.size()) {
+			if (lasPersonas.get(i).getId().equalsIgnoreCase(id)) {
+				aux = lasPersonas.get(i);
 				encontrado = true;
 			}
 			i++;
@@ -150,7 +150,7 @@ public class BolsaLaboral implements Serializable{
 		return resultado;
 	}
 
-	public ArrayList<Persona> getLosPersonal() { return losPersonal; }
+	public ArrayList<Persona> getlasPersonas() { return lasPersonas; }
 	public ArrayList<Empresa> getLasEmpresas() { return lasEmpresas; }
 	public ArrayList<Oferta> getLasOfertas() { return lasOfertas; }
 	public ArrayList<Solicitud> getLasSolicitudes() { return lasSolicitudes; }
@@ -272,6 +272,22 @@ public class BolsaLaboral implements Serializable{
 			{
 				solicitud.setEstado("activa");
 			}}}
+	public Object autenticar(String usuario, String contrasena) 
+	{		
+		for (Persona p : lasPersonas) 
+		{
+			if (p.getUsuario().equalsIgnoreCase(usuario) && p.getContrasena().equals(contrasena)) 
+			{
+				return p;
+			}}
+		for (Empresa e : lasEmpresas) 
+		{
+			if (e.getNombre().equalsIgnoreCase(usuario) && e.getRnc().equals(contrasena)) 
+			{
+				return e;
+			}}
+		return null; 
+	}
 		
 	public void guardarMemoria() {
         File archivo = new File("BolsaData.dat"); 
