@@ -178,7 +178,12 @@ public class BolsaLaboral implements Serializable{
 					oferta.getTipo().equalsIgnoreCase("obrero")) puntos++;
 
 			if(solicitud.getTipoJornada().equalsIgnoreCase(oferta.getTipoJornada()))puntos++;
-			if (solicitud.getSolicitante().getSexo().equalsIgnoreCase(oferta.getSexo())) puntos++;
+			
+			if (oferta.getSexo().equalsIgnoreCase("cualquiera") ||
+			        solicitud.getSolicitante().getSexo().equalsIgnoreCase(oferta.getSexo())) {
+			    puntos++;
+			}
+			
 			if (solicitud.getArea().equalsIgnoreCase(oferta.getArea())) puntos++;
 
 			if (!oferta.isRequiereLicencia() ||

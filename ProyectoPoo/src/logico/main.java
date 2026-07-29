@@ -11,14 +11,14 @@ public class main {
         Empresa emp = new Empresa("RNC-12345", "TechDominicana", "Juan Perez", "Av. Pedro A. Rivera, La Vega",
         							"809-555-5555", "rrhh@techdom.com", "Tecnologia");
         bolsa.registrarEmpresa(emp);
-        Oferta oferta = new Oferta("OF-1", "Tecnologia", "Desarrollador de Software", "Sistemas", 2, "Femenino", "Universitario", false, false, "Remoto", 
+        Oferta oferta = new Oferta("OF-1", "Tecnologia", "Desarrollador de Software", "Ingenieria de Sistemas", 2, "cualquiera", "Universitario", false, false, "Remoto", 
                 "Tiempo Completo", "Santiago", 30000f, 60000f, 60f, new Date(), emp);
         bolsa.registrarOferta(oferta);
 
 
         
         Universitario uni = new Universitario("P-1", "MariaLopez", "1234", "maria@gmail.com", "829-555-1234", true, "Centro", "La Vega", 
-                                              "Femenino", true, "Ingeniera de Sistemas");
+                                              "Femenino", true, "Ingenieria de Sistemas");
         bolsa.registrarPersona(uni);
         Tecnico tec = new Tecnico("P-2", "CarlosRamirez", "1234", "carlos@gmail.com", "809-555-4321", true, "Palmarito", "Santiago", 
                                           "Masculino", false, "Redes");
