@@ -247,6 +247,14 @@ public class RegPersona extends JDialog {
 			{
 				JButton cancelButton = new JButton("Cancelar");
 				cancelButton.setActionCommand("Cancel");
+				cancelButton.addActionListener(new ActionListener() 
+				{
+				    public void actionPerformed(ActionEvent e) 
+				    {
+				        cancelButton.setEnabled(false);
+				        dispose();
+				    }
+				});
 				buttonPane.add(cancelButton);
 			}
 		}
