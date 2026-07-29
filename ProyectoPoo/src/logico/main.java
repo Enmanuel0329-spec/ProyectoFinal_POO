@@ -11,8 +11,8 @@ public class main {
         Empresa emp = new Empresa("RNC-12345", "TechDominicana", "Juan Perez", "Av. Pedro A. Rivera, La Vega",
         							"809-555-5555", "rrhh@techdom.com", "Tecnologia");
         bolsa.registrarEmpresa(emp);
-        Oferta oferta = new Oferta("OF-1", "Desarrollador de Software", 2, "Femenino", "Universitario", false, false, "Remoto", 
-                                   "Tiempo Completo", "Santiago", 30000f, 60000f, 60f, new Date(), emp);  
+        Oferta oferta = new Oferta("OF-1", "Tecnologia", "Desarrollador de Software", "Sistemas", 2, "Femenino", "Universitario", false, false, "Remoto", 
+                "Tiempo Completo", "Santiago", 30000f, 60000f, 60f, new Date(), emp);
         bolsa.registrarOferta(oferta);
 
 

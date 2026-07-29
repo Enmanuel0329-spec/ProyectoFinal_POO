@@ -21,4 +21,7 @@ public class Tecnico extends Persona implements Serializable{
     { 
     	this.especialidad = especialidad; 
     }
+    public String getCualificacion() {
+        return especialidad;
+    }
 }

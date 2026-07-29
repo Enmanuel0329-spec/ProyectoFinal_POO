@@ -10,7 +10,7 @@ public class BolsaLaboral implements Serializable{
 	private ArrayList<Empresa> lasEmpresas;
 	private ArrayList<Oferta> lasOfertas;
 	private ArrayList<Solicitud> lasSolicitudes;	
-//	private ArrayList<Usuario> losUsuarios;
+	//	private ArrayList<Usuario> losUsuarios;
 	private static final long serialVersionUID = 1L;
 
 
@@ -26,7 +26,7 @@ public class BolsaLaboral implements Serializable{
 		lasPersonas = new ArrayList<>();
 		lasEmpresas = new ArrayList<>();
 		lasOfertas = new ArrayList<>();
-//		losUsuarios = new ArrayList<>();
+		//		losUsuarios = new ArrayList<>();
 		lasSolicitudes = new ArrayList<>();
 	}
 
@@ -154,21 +154,22 @@ public class BolsaLaboral implements Serializable{
 	public ArrayList<Empresa> getLasEmpresas() { return lasEmpresas; }
 	public ArrayList<Oferta> getLasOfertas() { return lasOfertas; }
 	public ArrayList<Solicitud> getLasSolicitudes() { return lasSolicitudes; }
-//	public ArrayList<Usuario> getLosUsuarios() { return losUsuarios; }
+	//	public ArrayList<Usuario> getLosUsuarios() { return losUsuarios; }
 
 	public ArrayList<ResultadoMatcheo> matcheoCandidatosParaOferta(Oferta oferta) {
 		ArrayList<ResultadoMatcheo> resultados = new ArrayList<>();
 
 		for (Solicitud solicitud : lasSolicitudes) {
-			
+
 			if (!solicitud.getSolicitante().isDisponible()) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("hold")) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
-			
+
 			int puntos = 0;
-			float total = 7;
-			
-			
+			float total = 8;
+			boolean coincideCualificacion = false;
+
+
 			if (solicitud.getSolicitante() instanceof Universitario && 
 					oferta.getTipo().equalsIgnoreCase("universitario")) puntos++;
 			else if (solicitud.getSolicitante() instanceof Tecnico && 
@@ -179,12 +180,12 @@ public class BolsaLaboral implements Serializable{
 			if(solicitud.getTipoJornada().equalsIgnoreCase(oferta.getTipoJornada()))puntos++;
 			if (solicitud.getSolicitante().getSexo().equalsIgnoreCase(oferta.getSexo())) puntos++;
 			if (solicitud.getArea().equalsIgnoreCase(oferta.getArea())) puntos++;
-			
+
 			if (!oferta.isRequiereLicencia() ||
 					solicitud.getSolicitante().isTieneLicencia()) {
 				puntos++;
 			}
-			
+
 			if (!oferta.isRequiereDispMudarse() ||
 					solicitud.isDispuestoMudarse()) {
 				puntos++;
@@ -192,13 +193,32 @@ public class BolsaLaboral implements Serializable{
 
 			if (solicitud.getSolicitante().getProvincia().equalsIgnoreCase(oferta.getProvincia())) puntos++;
 
+			if (solicitud.getSolicitante() instanceof Obrero) {
+				Obrero obrero = (Obrero) solicitud.getSolicitante();
+				int j = 0;
+				boolean encontrado = false;
+				while (!encontrado && j < obrero.getHabilidades().size()) {
+					if (obrero.getHabilidades().get(j).equalsIgnoreCase(oferta.getEspecialidad())) {
+						encontrado = true;
+					}
+					j++;
+				}
+				coincideCualificacion = encontrado;
+			} else {
+				coincideCualificacion = solicitud.getSolicitante().getCualificacion()
+						.equalsIgnoreCase(oferta.getEspecialidad());
+			}
+
+			if (coincideCualificacion) puntos++;
+
 			float porcentaje = (  (float)puntos / total) * 100;
 
 			if (porcentaje >= oferta.getPorcentajeMinimo()) {
 				resultados.add(new ResultadoMatcheo(solicitud, oferta, porcentaje));
 			}
 		}
-
+		
+		
 		resultados.sort((r1, r2) ->
 		Float.compare(r2.getPorcentaje(), r1.getPorcentaje()));
 
@@ -232,35 +252,36 @@ public class BolsaLaboral implements Serializable{
 			}
 		}
 	}
-	
+
 	public void FotoPerfil(File archivoOrigen, Persona persona) {
-        File carpeta = new File("fotos");
-        if (!carpeta.exists()) {
-            carpeta.mkdirs();  
-        }
- 
-        String ruta = "fotos/" + persona.getId() + ".jpg";
-        File archivoSalida = new File(ruta);
+		File carpeta = new File("fotos");
+		if (!carpeta.exists()) {
+			carpeta.mkdirs();  
+		}
 
-        try {
-            FileInputStream lector = new FileInputStream(archivoOrigen);
-            FileOutputStream escritor = new FileOutputStream(archivoSalida);
+		String ruta = "fotos/" + persona.getId() + ".jpg";
+		File archivoSalida = new File(ruta);
 
-            int unByte;
-            while ((unByte = lector.read()) != -1) {
-                escritor.write(unByte);
-            }
-            lector.close();
-            escritor.close();
-            
-            persona.setRutaFotoPerfil(ruta);
-            
-            System.out.println("La foto ha sido copiada con éxito a: " + ruta);
+		try {
+			FileInputStream lector = new FileInputStream(archivoOrigen);
+			FileOutputStream escritor = new FileOutputStream(archivoSalida);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			int unByte;
+			while ((unByte = lector.read()) != -1) {
+				escritor.write(unByte);
+			}
+			lector.close();
+			escritor.close();
+
+			persona.setRutaFotoPerfil(ruta);
+
+			System.out.println("La foto ha sido copiada con éxito a: " + ruta);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void procesarRenuncia(Persona candidato) 
 	{
 		for (Solicitud solicitud : solicitudesPorPersona(candidato)) 
@@ -272,7 +293,10 @@ public class BolsaLaboral implements Serializable{
 			else if (solicitud.getEstado().equalsIgnoreCase("hold")) 
 			{
 				solicitud.setEstado("activa");
-			}}}
+			}
+		}
+	}
+
 	public Object autenticar(String usuario, String contrasena) 
 	{		
 		for (Persona p : lasPersonas) 
@@ -280,55 +304,57 @@ public class BolsaLaboral implements Serializable{
 			if (p.getUsuario().equalsIgnoreCase(usuario) && p.getContrasena().equals(contrasena)) 
 			{
 				return p;
-			}}
+			}
+		}
 		for (Empresa e : lasEmpresas) 
 		{
 			if (e.getNombre().equalsIgnoreCase(usuario) && e.getRnc().equals(contrasena)) 
 			{
 				return e;
-			}}
+			}
+		}
 		return null; 
 	}
-		
+
 	public void guardarMemoria() {
-        File archivo = new File("BolsaData.dat"); 
-        
-        try {
-            FileOutputStream file = new FileOutputStream(archivo);
-            ObjectOutputStream oos = new ObjectOutputStream(file); 
-            oos.writeObject(this); 
-            oos.close();
-            file.close();
-            System.out.println("Sistema guardado correctamente.");
-        } catch (IOException e) {
-            System.out.println("Error al guardar: " + e.getMessage());
-        }
-    }
+		File archivo = new File("BolsaData.dat"); 
+
+		try {
+			FileOutputStream file = new FileOutputStream(archivo);
+			ObjectOutputStream oos = new ObjectOutputStream(file); 
+			oos.writeObject(this); 
+			oos.close();
+			file.close();
+			System.out.println("Sistema guardado correctamente.");
+		} catch (IOException e) {
+			System.out.println("Error al guardar: " + e.getMessage());
+		}
+	}
 
 	public static BolsaLaboral sacarMemoria() {
-        File archivo = new File("BolsaData.dat");
-        
-        if (archivo.exists()) {
-            try
-            {
-                FileInputStream file = new FileInputStream(archivo);
-                ObjectInputStream ois = new ObjectInputStream(file); 
-                BolsaLaboral datosBolsa = (BolsaLaboral) ois.readObject(); 
-                ois.close();
-                file.close(); 
-                BolsaLaboral.instancia = datosBolsa;
-                System.out.println("Sistema cargado con exito.");
-                return datosBolsa;
-                
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Error al cargar.");
-            }
-        }
-        
-        return BolsaLaboral.getInstancia();
-    }
+		File archivo = new File("BolsaData.dat");
+
+		if (archivo.exists()) {
+			try
+			{
+				FileInputStream file = new FileInputStream(archivo);
+				ObjectInputStream ois = new ObjectInputStream(file); 
+				BolsaLaboral datosBolsa = (BolsaLaboral) ois.readObject(); 
+				ois.close();
+				file.close(); 
+				BolsaLaboral.instancia = datosBolsa;
+				System.out.println("Sistema cargado con exito.");
+				return datosBolsa;
+
+			} catch (IOException | ClassNotFoundException e) {
+				System.out.println("Error al cargar.");
+			}
+		}
+
+		return BolsaLaboral.getInstancia();
+	}
 }
-	/*public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
+/*public Usuario crearUsuarioDesdeEmpresa(Empresa empresa) {
 		String correo = empresa.getCorreo();
 		String username = correo.substring(0, correo.indexOf("@"));
 		String password = String.valueOf(1000 + new java.util.Random().nextInt(9000));

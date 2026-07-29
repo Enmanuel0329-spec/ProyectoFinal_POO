@@ -20,5 +20,8 @@ public class Universitario extends Persona implements Serializable{
     { 
     	this.titulo = titulo; 
     }
+    public String getCualificacion() {
+        return titulo;
+    }
 }
 //nota: en cada clase hija evalue sus sus requerimientos ej: tecnico tiene que cumplir con una cant de annios de experiencia

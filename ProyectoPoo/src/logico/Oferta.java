@@ -20,10 +20,12 @@ public class Oferta {
 	private float porcentajeMinimo;
 	private Date fecha;
 	private Empresa empresa;
+	private String especialidad;
+
 
 	private boolean activa;
 
-	public Oferta(String codigo, String area, String descripcionPuesto, int cantidadPuestos,
+	public Oferta(String codigo, String area, String descripcionPuesto, String especialidad, int cantidadPuestos,
 			String sexo, String tipo, boolean requiereLicencia,
 			boolean requiereDispMudarse, String modalidad, String tipoJornada, String provincia,
 			float salarioMinimo, float salarioMaximo, float porcentajeMinimo, Date fecha, Empresa empresa) {
@@ -44,6 +46,7 @@ public class Oferta {
 		this.empresa = empresa;
 		this.activa = true;
 		this.area = area;
+		this.especialidad = especialidad;
 	}
 
 	public String getCodigo() { return codigo; }
@@ -68,4 +71,5 @@ public class Oferta {
 	public void setPorcentajeMinimo(float porcentajeMinimo) { this.porcentajeMinimo = porcentajeMinimo; }
 	public String getTipoJornada() { return tipoJornada; }
 	public void setTipoJornada(String tipoJornada) { this.tipoJornada = tipoJornada; }
+	public String getEspecialidad() { return especialidad; }
 }
