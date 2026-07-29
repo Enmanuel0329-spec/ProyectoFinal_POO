@@ -166,7 +166,7 @@ public class BolsaLaboral implements Serializable{
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
 			
 			int puntos = 0;
-			float total = 6;
+			float total = 7;
 			
 			
 			if (solicitud.getSolicitante() instanceof Universitario && 
@@ -178,7 +178,8 @@ public class BolsaLaboral implements Serializable{
 
 			if(solicitud.getTipoJornada().equalsIgnoreCase(oferta.getTipoJornada()))puntos++;
 			if (solicitud.getSolicitante().getSexo().equalsIgnoreCase(oferta.getSexo())) puntos++;
-
+			if (solicitud.getArea().equalsIgnoreCase(oferta.getArea())) puntos++;
+			
 			if (!oferta.isRequiereLicencia() ||
 					solicitud.getSolicitante().isTieneLicencia()) {
 				puntos++;
