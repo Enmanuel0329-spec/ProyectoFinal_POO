@@ -16,8 +16,10 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+
 import logico.BolsaLaboral;
 import logico.Persona;
+import logico.RespaldoHilado;
 import logico.Empresa;
 
 public class Principal extends JFrame {
@@ -36,7 +38,9 @@ public class Principal extends JFrame {
     private JMenu mnMisSolicitudes;
     private JMenuItem mntmCrearSolicitud;
     private JMenuItem mntmRenunciar;  
-
+    private JMenu mnAdministracion;
+    private JMenuItem mntmRespaldo;
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() 
         {
@@ -163,6 +167,22 @@ public class Principal extends JFrame {
                     aplicarPermisos(usuarioLogueado); 
                 }}});
         mnMisSolicitudes.add(mntmRenunciar);
+        mnAdministracion = new JMenu("Administracion");
+        mnAdministracion.setFont(new Font("Arial Narrow", Font.BOLD, 15));
+        menuBar.add(mnAdministracion);
+
+        mntmRespaldo = new JMenuItem("Respaldar en la Nube");
+        mntmRespaldo.setFont(new Font("Arial Narrow", Font.BOLD, 14));
+        mntmRespaldo.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                JOptionPane.showMessageDialog(null, 
+                    "Iniciando conexión con el servidor....","Respaldo Iniciado", JOptionPane.INFORMATION_MESSAGE);
+                RespaldoHilado hiloNube = new RespaldoHilado();
+                hiloNube.start();
+            }});
+        mnAdministracion.add(mntmRespaldo);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -184,7 +204,8 @@ public class Principal extends JFrame {
             mntmCandConsultar.setVisible(false); 
             mntmCatRegistrar.setVisible(false); 
             
-            mnMisSolicitudes.setVisible(true);  
+            mnMisSolicitudes.setVisible(true);
+            mnAdministracion.setVisible(false);  
             
             if (candidato.isDisponible()) {
                 mntmCrearSolicitud.setVisible(true);
@@ -198,10 +219,10 @@ public class Principal extends JFrame {
         	mnCandidatos.setVisible(false);
             mntmCentRegistrar.setVisible(false); 
             mntmCandRegistrar.setVisible(false); 
-            mnMisSolicitudes.setVisible(false); 
+            mnMisSolicitudes.setVisible(false);
+            mnAdministracion.setVisible(false); 
             
         } else {
             mnMisSolicitudes.setVisible(false);
-        }
-    }
-}
+            mnAdministracion.setVisible(true);
+        }}}
