@@ -126,6 +126,7 @@ public class ResultadosMatcheo extends JDialog {
 			JOptionPane.showMessageDialog(this,
 					"No se encontraron candidatos que cumplan con el minimo de coincidencia.",
 					"Sin resultados", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 
 		int i = 0;

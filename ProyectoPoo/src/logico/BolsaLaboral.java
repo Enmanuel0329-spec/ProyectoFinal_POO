@@ -38,30 +38,36 @@ public class BolsaLaboral implements Serializable{
 	public void registrarPersona(Persona p) {
 		lasPersonas.add(p);
 		generadorIdPersona++;
+		guardarMemoria();
 	}
 
 	public void registrarEmpresa(Empresa e) {
 		lasEmpresas.add(e);
 		generadorIdEmpresa++;
+		guardarMemoria();
 	}
 
 	public void registrarOferta(Oferta o) {
 		lasOfertas.add(o);
 		generadorIdOferta++;
+		guardarMemoria();
 	}
 
 	public void eliminarOferta(Oferta o) {
 		lasOfertas.remove(o);
+		guardarMemoria();
 	}
 
 	public void registrarSolicitud(Solicitud s) {
 		lasSolicitudes.add(s);
 		generadorIdSolicitud++;
+		guardarMemoria();
 	}
 
 	public void registrarUsuario(Usuario u) {
 		losUsuarios.add(u);
 		generadorIdUsuario++;
+		guardarMemoria();
 	}
 
 	public Persona buscarPersona(String id) {
@@ -260,6 +266,7 @@ public class BolsaLaboral implements Serializable{
 				s.setEstado("hold");
 			}
 		}
+		guardarMemoria();
 	}
 
 	public void FotoPerfil(File archivoOrigen, Persona persona) {
@@ -285,10 +292,13 @@ public class BolsaLaboral implements Serializable{
 			persona.setRutaFotoPerfil(ruta);
 
 			System.out.println("La foto ha sido copiada con éxito a: " + ruta);
+			
+			guardarMemoria();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	public void procesarRenuncia(Persona candidato) 
@@ -304,6 +314,7 @@ public class BolsaLaboral implements Serializable{
 				solicitud.setEstado("activa");
 			}
 		}
+		guardarMemoria();
 	}
 
 	private Usuario buscarUsuarioPorCredenciales(String username, String password) {
@@ -380,6 +391,7 @@ public class BolsaLaboral implements Serializable{
 		String id = "U-" + generadorIdUsuario;
 		Usuario u = new Usuario(id, username, password, empresa, null, true);
 		registrarUsuario(u);
+		
 		return u;
 	}
 

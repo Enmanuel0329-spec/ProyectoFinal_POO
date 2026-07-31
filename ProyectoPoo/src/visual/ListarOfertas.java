@@ -40,6 +40,7 @@ public class ListarOfertas extends JDialog {
 	private JButton btnMatchear;
 	
 	private boolean esEmpresa;
+	private boolean esAdmin;
 	private Empresa empresaActual;
 	private Persona candidatoActual;
 
@@ -54,12 +55,17 @@ public class ListarOfertas extends JDialog {
 	}
 
 	public ListarOfertas(Object usuarioLogueado) {
-		esEmpresa = usuarioLogueado instanceof Empresa;
-		if (esEmpresa) {
-			empresaActual = (Empresa) usuarioLogueado;
-		} else if (usuarioLogueado instanceof Persona) {
-			candidatoActual = (Persona) usuarioLogueado;
+		if (usuarioLogueado == null) {
+			esAdmin = true;
+		}{
+			esEmpresa = usuarioLogueado instanceof Empresa;
+			if (esEmpresa) {
+				empresaActual = (Empresa) usuarioLogueado;
+			} else if (usuarioLogueado instanceof Persona) {
+				candidatoActual = (Persona) usuarioLogueado;
+			}
 		}
+		
 
 		setResizable(false);
 		setTitle(esEmpresa ? "Mis Ofertas" : "Catalogo de Ofertas");
@@ -95,9 +101,12 @@ public class ListarOfertas extends JDialog {
 								String codigo = table.getValueAt(index, 0).toString();
 								selected = BolsaLaboral.getInstancia().buscarOferta(codigo);
 
-								if (esEmpresa) {
+								if (esEmpresa || esAdmin) {
 									btnModificar.setEnabled(true);
 									btnEliminar.setEnabled(true);
+									if (esEmpresa) {
+					                    btnMatchear.setEnabled(true);
+					                }
 								} else {
 									btnAplicar.setEnabled(selected != null && selected.isActiva()
 											&& selected.getCantidadPuestos() > 0);
@@ -115,21 +124,24 @@ public class ListarOfertas extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-			if (esEmpresa) {
-				btnMatchear = new JButton("Buscar candidatos");
-				btnMatchear.setForeground(new Color(255, 255, 255));
-				btnMatchear.setBackground(new Color(100, 237, 149));
-				btnMatchear.setEnabled(false);
-				btnMatchear.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (selected != null) {
-							ResultadosMatcheo dialog = new ResultadosMatcheo(selected);
-							dialog.setModal(true);
-							dialog.setVisible(true);
+			if (esEmpresa || esAdmin) {
+				
+				if (esEmpresa) {					
+					btnMatchear = new JButton("Buscar candidatos");
+					btnMatchear.setForeground(new Color(255, 255, 255));
+					btnMatchear.setBackground(new Color(100, 237, 149));
+					btnMatchear.setEnabled(false);
+					btnMatchear.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if (selected != null) {
+								ResultadosMatcheo dialog = new ResultadosMatcheo(selected);
+								dialog.setModal(true);
+								dialog.setVisible(true);
+							}
 						}
-					}
-				});
-				buttonPane.add(btnMatchear);
+					});
+					buttonPane.add(btnMatchear);
+				}
 				
 				btnModificar = new JButton("Modificar");
 				btnModificar.setForeground(new Color(255, 255, 255));
@@ -155,7 +167,11 @@ public class ListarOfertas extends JDialog {
 								BolsaLaboral.getInstancia().eliminarOferta(selected);
 								btnModificar.setEnabled(false);
 								btnEliminar.setEnabled(false);
-								btnMatchear.setEnabled(true);
+								
+								if (esEmpresa) {
+				                    btnMatchear.setEnabled(false);
+				                }
+
 								cargarOfertas();
 							}
 						}
@@ -201,7 +217,11 @@ public class ListarOfertas extends JDialog {
 		ArrayList<Oferta> ofertas;
 		if (esEmpresa) {
 			ofertas = BolsaLaboral.getInstancia().ofertasPorEmpresa(empresaActual);
-		} else {
+		}
+		else if (esAdmin) {
+	        ofertas = BolsaLaboral.getInstancia().getLasOfertas();
+		}
+		else {
 			ofertas = new ArrayList<Oferta>();
 			for (Oferta o : BolsaLaboral.getInstancia().getLasOfertas()) {
 				if (o.isActiva() && o.getCantidadPuestos() > 0) {
