@@ -1,6 +1,7 @@
 package logico;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Solicitud implements Serializable {
 
@@ -14,6 +15,8 @@ public class Solicitud implements Serializable {
 	private float salarioMaximo;
 	private boolean dispuestoMudarse;
 	private String estado;
+	private Oferta ofertaContratada;
+	private Date fecha;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -93,6 +96,13 @@ public class Solicitud implements Serializable {
 	
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public Oferta getOfertaContratada() {
+		return ofertaContratada;
+	}
+	public void setOfertaContratada(Oferta ofertaContratada) {
+		this.ofertaContratada = ofertaContratada;
 	}
 	
 	
