@@ -1,8 +1,9 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Oferta {
+public class Oferta implements Serializable {
 
 	private String codigo;
 	private String descripcionPuesto;
