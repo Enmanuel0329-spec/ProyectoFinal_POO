@@ -373,6 +373,10 @@ public class BolsaLaboral implements Serializable{
 				ois.close();
 				file.close(); 
 				BolsaLaboral.instancia = datosBolsa;
+				generadorIdPersona = datosBolsa.getlasPersonas().size() + 1;
+				generadorIdEmpresa = datosBolsa.getLasEmpresas().size() + 1;
+				generadorIdOferta = datosBolsa.getLasOfertas().size() + 1;
+				generadorIdSolicitud = datosBolsa.getLasSolicitudes().size() + 1;
 				System.out.println("Sistema cargado con exito.");
 				return datosBolsa;
 
