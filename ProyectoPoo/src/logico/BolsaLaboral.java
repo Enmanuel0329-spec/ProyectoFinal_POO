@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.io.*;
 
-public class BolsaLaboral implements Serializable{
+public class BolsaLaboral implements Serializable {
 
 	private ArrayList<Persona> lasPersonas;
 	private ArrayList<Empresa> lasEmpresas;
@@ -12,7 +12,6 @@ public class BolsaLaboral implements Serializable{
 	private ArrayList<Solicitud> lasSolicitudes;	
 	private ArrayList<Usuario> losUsuarios;
 	private static final long serialVersionUID = 1L;
-
 
 	public static int generadorIdSolicitud = 1;
 	public static int generadorIdOferta = 1;
@@ -55,6 +54,7 @@ public class BolsaLaboral implements Serializable{
 
 	public void eliminarOferta(Oferta o) {
 		lasOfertas.remove(o);
+		guardarMemoria();
 	}
 
 	public void registrarSolicitud(Solicitud s) {
@@ -232,7 +232,6 @@ public class BolsaLaboral implements Serializable{
 			}
 		}
 
-
 		resultados.sort((r1, r2) ->
 		Float.compare(r2.getPorcentaje(), r1.getPorcentaje()));
 
@@ -247,7 +246,6 @@ public class BolsaLaboral implements Serializable{
 		for (Oferta oferta : ofertasPorEmpresa(e)) {
 			if (oferta.isActiva()) {
 				ArrayList<ResultadoMatcheo> candidatos = matcheoCandidatosParaOferta(oferta);
-				// pantalla
 			}
 		}
 	}
@@ -265,6 +263,7 @@ public class BolsaLaboral implements Serializable{
 				s.setEstado("hold");
 			}
 		}
+		guardarMemoria();
 	}
 
 	public void FotoPerfil(File archivoOrigen, Persona persona) {
@@ -290,25 +289,24 @@ public class BolsaLaboral implements Serializable{
 			persona.setRutaFotoPerfil(ruta);
 
 			System.out.println("La foto ha sido copiada con éxito a: " + ruta);
+			
+			guardarMemoria();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void procesarRenuncia(Persona candidato) 
-	{
-		for (Solicitud solicitud : solicitudesPorPersona(candidato)) 
-		{ 
-			if (solicitud.getEstado().equalsIgnoreCase("completada")) 
-			{
+	public void procesarRenuncia(Persona candidato) {
+		for (Solicitud solicitud : solicitudesPorPersona(candidato)) { 
+			if (solicitud.getEstado().equalsIgnoreCase("completada")) {
 				solicitud.setEstado("renuncio");
 			}
-			else if (solicitud.getEstado().equalsIgnoreCase("hold")) 
-			{
+			else if (solicitud.getEstado().equalsIgnoreCase("hold")) {
 				solicitud.setEstado("activa");
 			}
 		}
+		guardarMemoria();
 	}
 
 	private Usuario buscarUsuarioPorCredenciales(String username, String password) {
@@ -359,8 +357,7 @@ public class BolsaLaboral implements Serializable{
 		File archivo = new File("BolsaData.dat");
 
 		if (archivo.exists()) {
-			try
-			{
+			try {
 				FileInputStream file = new FileInputStream(archivo);
 				ObjectInputStream ois = new ObjectInputStream(file); 
 				BolsaLaboral datosBolsa = (BolsaLaboral) ois.readObject(); 
@@ -371,6 +368,7 @@ public class BolsaLaboral implements Serializable{
 				generadorIdEmpresa = datosBolsa.getLasEmpresas().size() + 1;
 				generadorIdOferta = datosBolsa.getLasOfertas().size() + 1;
 				generadorIdSolicitud = datosBolsa.getLasSolicitudes().size() + 1;
+				generadorIdUsuario = datosBolsa.getLosUsuarios().size() + 1;
 				System.out.println("Sistema cargado con exito.");
 				return datosBolsa;
 
@@ -378,7 +376,6 @@ public class BolsaLaboral implements Serializable{
 				System.out.println("Error al cargar.");
 			}
 		}
-
 		return BolsaLaboral.getInstancia();
 	}
 
@@ -389,6 +386,7 @@ public class BolsaLaboral implements Serializable{
 		String id = "U-" + generadorIdUsuario;
 		Usuario u = new Usuario(id, username, password, empresa, null, true);
 		registrarUsuario(u);
+		
 		return u;
 	}
 
@@ -420,8 +418,4 @@ public class BolsaLaboral implements Serializable{
 		}
 		return encontrado;
 	}
-
 }
-
-
-
