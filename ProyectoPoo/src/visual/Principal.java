@@ -10,12 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import java.awt.Font;
 import java.awt.Toolkit;
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 
 import logico.BolsaLaboral;
 import logico.Persona;
@@ -38,9 +36,11 @@ public class Principal extends JFrame {
     private JMenu mnMisSolicitudes;
     private JMenuItem mntmCrearSolicitud;
     private JMenuItem mntmRenunciar;  
+    private JMenu mnSolicitudes;
+    private JMenuItem mntmSolConsultar;
     private JMenu mnAdministracion;
     private JMenuItem mntmRespaldo;
-    
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() 
         {
@@ -75,6 +75,13 @@ public class Principal extends JFrame {
         menuBar.add(mnCentros);
         
         mntmCentConsultar = new JMenuItem("Consultar");
+        mntmCentConsultar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListarEmpresas listarEmpresas = new ListarEmpresas();
+        		listarEmpresas.setModal(true);
+        		listarEmpresas.setVisible(true);
+        	}
+        });
         mntmCentConsultar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCentros.add(mntmCentConsultar);
         
@@ -94,6 +101,13 @@ public class Principal extends JFrame {
         menuBar.add(mnCandidatos);
         
         mntmCandConsultar = new JMenuItem("Consultar");
+        mntmCandConsultar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListarCandidatos lista = new ListarCandidatos();
+                lista.setModal(true);
+                lista.setVisible(true);
+        	}
+        });
         mntmCandConsultar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCandidatos.add(mntmCandConsultar);
         
@@ -135,6 +149,21 @@ public class Principal extends JFrame {
         mntmCatRegistrar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
         mnCatlogoDeOfertas.add(mntmCatRegistrar);
 
+        mnSolicitudes = new JMenu("Solicitudes");
+        mnSolicitudes.setFont(new Font("Arial Narrow", Font.BOLD, 15));
+        menuBar.add(mnSolicitudes);
+
+        mntmSolConsultar = new JMenuItem("Consultar");
+        mntmSolConsultar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ListarSolicitudes lista = new ListarSolicitudes();
+                lista.setModal(true);
+                lista.setVisible(true);
+            }
+        });
+        mntmSolConsultar.setFont(new Font("Arial Narrow", Font.BOLD, 14));
+        mnSolicitudes.add(mntmSolConsultar);
+        
         mnMisSolicitudes = new JMenu("Mis Solicitudes");
         mnMisSolicitudes.setFont(new Font("Arial Narrow", Font.BOLD, 15));
         menuBar.add(mnMisSolicitudes);
@@ -167,6 +196,7 @@ public class Principal extends JFrame {
                     aplicarPermisos(usuarioLogueado); 
                 }}});
         mnMisSolicitudes.add(mntmRenunciar);
+        
         mnAdministracion = new JMenu("Administracion");
         mnAdministracion.setFont(new Font("Arial Narrow", Font.BOLD, 15));
         menuBar.add(mnAdministracion);
@@ -183,6 +213,7 @@ public class Principal extends JFrame {
                 hiloNube.start();
             }});
         mnAdministracion.add(mntmRespaldo);
+        
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -203,9 +234,10 @@ public class Principal extends JFrame {
             mntmCandRegistrar.setVisible(false); 
             mntmCandConsultar.setVisible(false); 
             mntmCatRegistrar.setVisible(false); 
-            
-            mnMisSolicitudes.setVisible(true);
+            mnSolicitudes.setVisible(false);
             mnAdministracion.setVisible(false);  
+            
+            mnMisSolicitudes.setVisible(true);  
             
             if (candidato.isDisponible()) {
                 mntmCrearSolicitud.setVisible(true);
@@ -215,14 +247,28 @@ public class Principal extends JFrame {
                 mntmRenunciar.setVisible(true);
             }
             
-        } else if (usuario instanceof Empresa) {
+        }
+        else if (usuario == null) {
+            // Admin
+            mntmCentRegistrar.setVisible(false);
+            mntmCandRegistrar.setVisible(false);
+            mntmCatRegistrar.setVisible(false);
+            mnSolicitudes.setVisible(true);
+            mnMisSolicitudes.setVisible(false);
+            mnAdministracion.setVisible(true);
+        }
+        else if (usuario instanceof Empresa) {
         	mnCandidatos.setVisible(false);
             mntmCentRegistrar.setVisible(false); 
             mntmCandRegistrar.setVisible(false); 
-            mnMisSolicitudes.setVisible(false);
+            mnSolicitudes.setVisible(false);
+            mnMisSolicitudes.setVisible(false); 
             mnAdministracion.setVisible(false); 
             
         } else {
             mnMisSolicitudes.setVisible(false);
-            mnAdministracion.setVisible(true);
-        }}}
+            mnSolicitudes.setVisible(false);
+            mnAdministracion.setVisible(false);
+        }
+    }
+}
