@@ -38,16 +38,19 @@ public class BolsaLaboral implements Serializable{
 	public void registrarPersona(Persona p) {
 		lasPersonas.add(p);
 		generadorIdPersona++;
+		guardarMemoria();
 	}
 
 	public void registrarEmpresa(Empresa e) {
 		lasEmpresas.add(e);
 		generadorIdEmpresa++;
+		guardarMemoria();
 	}
 
 	public void registrarOferta(Oferta o) {
 		lasOfertas.add(o);
 		generadorIdOferta++;
+		guardarMemoria();
 	}
 
 	public void eliminarOferta(Oferta o) {
@@ -57,11 +60,13 @@ public class BolsaLaboral implements Serializable{
 	public void registrarSolicitud(Solicitud s) {
 		lasSolicitudes.add(s);
 		generadorIdSolicitud++;
+		guardarMemoria();
 	}
 
 	public void registrarUsuario(Usuario u) {
 		losUsuarios.add(u);
 		generadorIdUsuario++;
+		guardarMemoria();
 	}
 
 	public Persona buscarPersona(String id) {
