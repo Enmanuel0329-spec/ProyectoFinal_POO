@@ -12,7 +12,6 @@ public class Empresa implements Serializable {
     private String correo;
     private String tipo;
     private ArrayList<Oferta> ofertas;
-    private static final long serialVersionUID = 1L;
     
     private static final long serialVersionUID = 1L;
     
