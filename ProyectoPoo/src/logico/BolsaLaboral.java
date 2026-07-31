@@ -255,6 +255,7 @@ public class BolsaLaboral implements Serializable {
 		persona.setDisponible(false);
 		solicitudContratada.setEstado("completada");
 		oferta.setCantidadPuestos(oferta.getCantidadPuestos() - 1);
+		solicitudContratada.setOfertaContratada(oferta);
 		if (oferta.getCantidadPuestos() == 0) {
 			oferta.setActiva(false);
 		}
@@ -301,6 +302,13 @@ public class BolsaLaboral implements Serializable {
 		for (Solicitud solicitud : solicitudesPorPersona(candidato)) { 
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) {
 				solicitud.setEstado("renuncio");
+				Oferta ofertaLiberada = solicitud.getOfertaContratada();
+	            if (ofertaLiberada != null) {
+	                ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
+	                if (!ofertaLiberada.isActiva()) {
+	                    ofertaLiberada.setActiva(true);
+	                }
+	            }
 			}
 			else if (solicitud.getEstado().equalsIgnoreCase("hold")) {
 				solicitud.setEstado("activa");
