@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class RegSolicitud extends JDialog {
     
     private Persona candidatoActual; 
-    private Solicitud solicitudExistente = null;  
+    private Solicitud solicitudExistente = null;  	
     
     private JTextField txtArea;
     private JTextField txtCargo;
@@ -95,10 +95,19 @@ public class RegSolicitud extends JDialog {
                     
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Por favor verifique que los valores sean correctos.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+                }}});
         btnGuardar.setBounds(250, 400, 150, 40);
         getContentPane().add(btnGuardar);
     }
-}
+    public RegSolicitud(Persona userLogueado, Oferta ofertaSeleccionada) 
+    {        
+        this(userLogueado);         
+        if (solicitudExistente == null && ofertaSeleccionada != null) 
+        {
+            txtArea.setText(ofertaSeleccionada.getArea());
+            txtCargo.setText(ofertaSeleccionada.getDescripcionPuesto());
+            cbxJornada.setSelectedItem(ofertaSeleccionada.getTipoJornada());
+            spnSalarioMin.setValue(ofertaSeleccionada.getSalarioMinimo());
+            spnSalarioMax.setValue(ofertaSeleccionada.getSalarioMaximo());
+            chkMudarse.setSelected(ofertaSeleccionada.isRequiereDispMudarse());
+        }}}
