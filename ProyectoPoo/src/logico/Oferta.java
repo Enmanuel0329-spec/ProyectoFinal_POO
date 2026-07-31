@@ -23,6 +23,7 @@ public class Oferta implements Serializable {
 	private Empresa empresa;
 	private String especialidad;
 
+	private static final long serialVersionUID = 1L;
 
 	private boolean activa;
 
