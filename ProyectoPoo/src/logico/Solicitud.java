@@ -1,6 +1,8 @@
 package logico;
 
-public class Solicitud {
+import java.io.Serializable;
+
+public class Solicitud implements Serializable {
 
 
 	private String codigo;
@@ -12,6 +14,8 @@ public class Solicitud {
 	private float salarioMaximo;
 	private boolean dispuestoMudarse;
 	private String estado;
+	
+	private static final long serialVersionUID = 1L;
 	
 	public Solicitud(String codigo, Persona solicitante, String area, String cargoDeseado, String tipoJornada,
 			float salarioMinimo, float salarioMaximo, boolean dispuestoMudarse) {

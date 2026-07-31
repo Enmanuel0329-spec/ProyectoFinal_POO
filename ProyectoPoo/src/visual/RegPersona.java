@@ -77,7 +77,7 @@ public class RegPersona extends JDialog {
 	 */
 	public RegPersona() {
 		setTitle(" Registrar Persona");
-		setBounds(100, 100, 554, 503);
+		setBounds(100, 100, 554, 540);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));

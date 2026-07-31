@@ -112,7 +112,8 @@ public class Login extends JDialog {
 					{
 						JOptionPane.showMessageDialog(null, "¡Bienvenido Administrador!", "Acceso Concedido", JOptionPane.INFORMATION_MESSAGE);
 						Principal mainFrame = new Principal(null); 
-						mainFrame.setVisible(true); dispose();
+						mainFrame.setVisible(true);
+						dispose();
 						return;
 					}
 

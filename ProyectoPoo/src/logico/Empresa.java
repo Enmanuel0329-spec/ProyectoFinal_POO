@@ -1,6 +1,7 @@
 package logico;
+import java.io.Serializable;
 import java.util.ArrayList;
-public class Empresa {
+public class Empresa implements Serializable {
 
 
 	private String rnc;
@@ -11,6 +12,7 @@ public class Empresa {
     private String correo;
     private String tipo;
     private ArrayList<Oferta> ofertas;
+    private static final long serialVersionUID = 1L;
     
     public Empresa(String rnc, String nombre, String representante, String direccion, String telefono, String correo,
 			String tipo) {
@@ -84,4 +86,3 @@ public class Empresa {
     
 
 }
-
