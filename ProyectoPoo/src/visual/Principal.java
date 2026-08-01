@@ -233,9 +233,18 @@ public class Principal extends JFrame {
 		    public void actionPerformed(ActionEvent e) {
 		        GraficoComparativaMensual dialog = new GraficoComparativaMensual();
 		        dialog.setVisible(true);
-		    }
-		});
+		    }});
 		mnAdministracion.add(mntmComparativaMensual);
+		
+		JMenuItem mntmEvolucion = new JMenuItem("Evolución Mensual");
+		mntmEvolucion.setFont(new Font("Arial Narrow", Font.BOLD, 14));
+		mntmEvolucion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EvoMesDatos graficoEvolucion = new EvoMesDatos();
+				graficoEvolucion.setModal(true);
+				graficoEvolucion.setVisible(true);
+			}});
+		mnAdministracion.add(mntmEvolucion);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
