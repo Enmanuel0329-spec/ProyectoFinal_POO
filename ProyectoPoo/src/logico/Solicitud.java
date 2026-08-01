@@ -16,7 +16,9 @@ public class Solicitud implements Serializable {
 	private boolean dispuestoMudarse;
 	private String estado;
 	private Oferta ofertaContratada;
-	private Date fecha;
+	private Date fechaCreacion;
+	private Date fechaContratacion;
+
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -32,6 +34,7 @@ public class Solicitud implements Serializable {
 		this.salarioMaximo = salarioMaximo;
 		this.estado = "activa";
 		this.dispuestoMudarse = dispuestoMudarse;
+		this.fechaCreacion = new Date();
 	}
 
 	public String getArea() {
@@ -104,7 +107,22 @@ public class Solicitud implements Serializable {
 	public void setOfertaContratada(Oferta ofertaContratada) {
 		this.ofertaContratada = ofertaContratada;
 	}
-	
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaContratacion() {
+		return fechaContratacion;
+	}
+
+	public void setFechaContratacion(Date fechaContratacion) {
+		this.fechaContratacion = fechaContratacion;
+	}
 	
 	
 	  

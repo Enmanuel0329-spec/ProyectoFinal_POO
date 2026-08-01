@@ -41,7 +41,8 @@ public class Principal extends JFrame {
 	private JMenu mnAdministracion;
 	private JMenuItem mntmRespaldo;
 	private JMenuItem mntmConsultarMisSolicitudes;
-
+	private JMenuItem mntmComparativaMensual;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() 
 		{
@@ -226,6 +227,16 @@ public class Principal extends JFrame {
 			}});
 		mnAdministracion.add(mntmRespaldo);
 
+		mntmComparativaMensual = new JMenuItem("Comparativa Mensual");
+		mntmComparativaMensual.setFont(new Font("Arial Narrow", Font.BOLD, 14));
+		mntmComparativaMensual.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        GraficoComparativaMensual dialog = new GraficoComparativaMensual();
+		        dialog.setVisible(true);
+		    }
+		});
+		mnAdministracion.add(mntmComparativaMensual);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

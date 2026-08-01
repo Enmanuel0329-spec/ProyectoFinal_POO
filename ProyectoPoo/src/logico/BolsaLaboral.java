@@ -2,6 +2,7 @@ package logico;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.io.*;
 
 public class BolsaLaboral implements Serializable {
@@ -174,6 +175,7 @@ public class BolsaLaboral implements Serializable {
 			if (solicitud.getEstado().equalsIgnoreCase("hold")) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
 			if (!solicitud.getArea().equalsIgnoreCase(oferta.getArea())) continue;
+			if (solicitud.getEstado().equalsIgnoreCase("renuncio")) continue;
 
 			int puntos = 0;
 			float total = 7;
@@ -256,6 +258,7 @@ public class BolsaLaboral implements Serializable {
 		solicitudContratada.setEstado("completada");
 		oferta.setCantidadPuestos(oferta.getCantidadPuestos() - 1);
 		solicitudContratada.setOfertaContratada(oferta);
+	    solicitudContratada.setFechaContratacion(new Date());
 		if (oferta.getCantidadPuestos() == 0) {
 			oferta.setActiva(false);
 		}
