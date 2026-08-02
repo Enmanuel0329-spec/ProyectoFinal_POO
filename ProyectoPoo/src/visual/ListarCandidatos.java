@@ -14,6 +14,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import logico.BolsaLaboral;
 import logico.Persona;
@@ -22,9 +24,11 @@ public class ListarCandidatos extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
+	
 
 	private static DefaultTableModel model;
 	private static Object[] row;
+	private JButton Modbutton;
 
 	public static void main(String[] args) {
 		try {
@@ -59,6 +63,21 @@ public class ListarCandidatos extends JDialog {
 					model = new DefaultTableModel();
 					model.setColumnIdentifiers(headers);
 					table = new JTable();
+					
+					table.addMouseListener(new MouseAdapter(){	
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							
+							int index = table.getSelectedRow();
+
+							if (index >= 0) {
+								Modbutton.setEnabled(true);
+								}
+						}
+							
+						
+							
+					});
 					table.setModel(model);
 					scrollPane.setViewportView(table);
 				}
@@ -75,6 +94,38 @@ public class ListarCandidatos extends JDialog {
 						dispose();
 					}
 				});
+				{
+					Modbutton = new JButton("Modificar");
+					Modbutton.setEnabled(false);
+					Modbutton.addActionListener(new ActionListener () {
+						public void actionPerformed(ActionEvent e) {
+							
+							int index = table.getSelectedRow();
+							if(index >= 0)
+							{
+								Persona personaSeleccionada = BolsaLaboral.getInstancia().getlasPersonas().get(index);
+								RegPersona dialog = new RegPersona();
+								
+								dialog.cargarDatos(personaSeleccionada, index);
+
+								dialog.setModal(true);
+								dialog.setVisible(true);
+
+								loadCandidatos();
+
+								Modbutton.setEnabled(false);
+								table.clearSelection();
+							}
+						}
+						
+						
+					}
+							
+							
+							
+							);
+					buttonPane.add(Modbutton);
+				}
 				buttonPane.add(cancelButton);
 			}
 		}

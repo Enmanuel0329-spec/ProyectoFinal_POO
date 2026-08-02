@@ -58,6 +58,12 @@ public class RegPersona extends JDialog {
 	private JComboBox<String> comboBoxProvincia;
 	private JCheckBox CheckBoxLicencia;
 	private JTextField txtId;
+	private boolean update = false;
+	private int indexUpd = -1;
+	private JButton okButton;
+	private Persona personaOriginal;
+	private String nivelOriginal;
+	private String datoProfesionalOriginal;
 
 	/**
 	 * Launch the application.
@@ -213,7 +219,42 @@ public class RegPersona extends JDialog {
 		txtDatoProfesional.setBounds(339, 23, 136, 22);
 		panelProfesional.add(txtDatoProfesional);
 
-		comboBoxAcademico.addActionListener(e -> actualizarCampoProfesional());
+		comboBoxAcademico.addActionListener(e -> 
+		{
+			actualizarCampoProfesional ();
+			
+			if(update && nivelOriginal!=null)
+			{
+				String nivelUpd= comboBoxAcademico.getSelectedItem().toString();
+				int  valorAnterior=valorAcademico(nivelOriginal);
+				int valorNuevo= valorAcademico(nivelUpd);
+				
+				if(valorNuevo>valorAnterior)
+				{
+					txtDatoProfesional.setEditable(true);
+					txtDatoProfesional.setText("");
+				}
+				else if(valorNuevo==valorAnterior)
+				{
+					 txtDatoProfesional.setText(datoProfesionalOriginal);
+					 txtDatoProfesional.setEditable(false);
+				}
+				else
+				{
+		
+						JOptionPane.showMessageDialog(this,"No puede seleccionar un nivel menos cualificado.",
+								"Nivel no permitido",
+								JOptionPane.WARNING_MESSAGE);
+
+					
+						comboBoxAcademico.setSelectedItem(nivelOriginal);
+			            txtDatoProfesional.setText(datoProfesionalOriginal);
+			            txtDatoProfesional.setEditable(false);
+				}
+			}
+			
+			
+		});
 		txtDatoProfesional.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
@@ -221,7 +262,7 @@ public class RegPersona extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("Registrar");
+				okButton = new JButton("Registrar");
 				okButton.setActionCommand("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed (ActionEvent e) {
@@ -230,15 +271,25 @@ public class RegPersona extends JDialog {
 						Persona persona = crearPersona();
 						if(persona!=null)
 						{
-							BolsaLaboral.getInstancia().registrarPersona(persona);
-							Usuario usuarioGenerado = BolsaLaboral.getInstancia().crearUsuarioDesdePersona(persona);
-							JOptionPane.showMessageDialog(null,
+							if(update)
+							{
+								BolsaLaboral.getInstancia().getlasPersonas().set(indexUpd,persona);
+								JOptionPane.showMessageDialog(null,"Persona modificada correctamente.");
+								dispose();
+							}
+							else {
+								BolsaLaboral.getInstancia().registrarPersona(persona);
+								Usuario usuarioGenerado = BolsaLaboral.getInstancia().crearUsuarioDesdePersona(persona);
+								JOptionPane.showMessageDialog(null,
 									"Persona registrada correctamente.\n" +
 											"Su usuario es: " + usuarioGenerado.getUsername() + "\n" +
 											"Su contrasena es: " + usuarioGenerado.getPassword());
+								
+								clear();
+							}
 						}
 
-						clear();
+						
 					}
 				});
 				buttonPane.add(okButton);
@@ -307,22 +358,57 @@ public class RegPersona extends JDialog {
 	        return null;
 	    }
 	    
-	    if (BolsaLaboral.getInstancia().existeCorreo(email)) {
-	        JOptionPane.showMessageDialog(this, "Ya existe un usuario registrado con ese correo.", 
-	                "Correo duplicado", JOptionPane.WARNING_MESSAGE);
-	        return null;
-	    }
+		if(update)
+		{
+			if(personaOriginal!=null)
+			{
+				 if (!personaOriginal.getEmail().equalsIgnoreCase(email))
+				 {
+					 if(BolsaLaboral.getInstancia().existeCorreo(email))
+					 {
+						 JOptionPane.showMessageDialog(this,
+			                        "Ya existe un usuario registrado con ese correo.",
+			                        "Correo duplicado",
+			                        JOptionPane.WARNING_MESSAGE);
+			                return null;
+						 
+					 }
+				 }
+			}
+		}
+		else
+		{
+			if (BolsaLaboral.getInstancia().existeCorreo(email)) {
+
+		        JOptionPane.showMessageDialog(this,
+		                "Ya existe un usuario registrado con ese correo.",
+		                "Correo duplicado",
+		                JOptionPane.WARNING_MESSAGE);
+		        return null;
+		    }
+		
+		}
 	    
 		String nivel = comboBoxAcademico.getSelectedItem().toString();
 		Persona person= null;
-		String id=txtId.getText();
-		String username= txtName.getText();
+		String id;
+		String username;
+		String sexo;
 		String telefono=txtTelefono.getText();
 		String direccion=txtDireccion.getText();
-		String sexo = comboBoxSexo.getSelectedItem().toString();
 		String provincia = comboBoxProvincia.getSelectedItem().toString();
 		boolean licencia = CheckBoxLicencia.isSelected();
 		String datoProfesional = txtDatoProfesional.getText();
+		
+		if (update && personaOriginal != null) {
+			id = personaOriginal.getId();
+			username = personaOriginal.getNombre();
+			sexo = personaOriginal.getSexo();
+		}else {
+			id = txtId.getText();
+			username = txtName.getText();
+			sexo = comboBoxSexo.getSelectedItem().toString();
+		}
 
 		if(nivel.equals("Universitario"))
 		{
@@ -347,6 +433,22 @@ public class RegPersona extends JDialog {
 		return person;
 
 	}
+	public int valorAcademico(String nivel)
+	{
+		if(nivel.equals("Obrero"))
+		{
+			return 1;
+		}
+		if(nivel.equals("Tecnico"))
+		{
+			return 2;
+		}
+		if(nivel.equals("Universitario"))
+		{
+			return 3; 
+		}
+		return 0;
+	}
 	public boolean camposCompletos () {
 
 		return !txtId.getText().trim().isEmpty()
@@ -354,8 +456,63 @@ public class RegPersona extends JDialog {
 				&& !txtEmail.getText().trim().isEmpty()
 				&& !txtTelefono.getText().trim().isEmpty()
 				&& !txtDireccion.getText().trim().isEmpty();
+				
 
+	}
+	public void cargarDatos(Persona persona, int index)
+	{
+		update=true ;
+		indexUpd=index;
+		setTitle("Modificar Persona");
+		okButton.setText("Modificar");
+		personaOriginal=persona;
+		
+		txtId.setText(persona.getId());
+		txtId.setEditable(false);
+		txtName.setText(persona.getNombre());
+		txtName.setEditable(false);
+		txtEmail.setText(persona.getEmail());
+		txtTelefono.setText(persona.getTelefono());
+		txtDireccion.setText(persona.getDireccion());
+		
+		comboBoxSexo.setSelectedItem(persona.getSexo());
+		comboBoxSexo.setEnabled(false);
+		
+		comboBoxProvincia.setSelectedItem(persona.getProvincia());
+		CheckBoxLicencia.setSelected(persona.isTieneLicencia());
+		
+		if(persona instanceof Universitario)
+		{
+			nivelOriginal="Universitario";
+			comboBoxAcademico.setSelectedItem("Universitario");
+			Universitario universitario = (Universitario) persona;
+			datoProfesionalOriginal= universitario.getTitulo();
+			txtDatoProfesional.setText(datoProfesionalOriginal);
+		}
+		else if(persona instanceof Tecnico)
+		{
+			nivelOriginal="Tecnico";
+			comboBoxAcademico.setSelectedItem("Tecnico");
+			Tecnico tecnico = (Tecnico) persona;
+			datoProfesionalOriginal=tecnico.getEspecialidad();
+			txtDatoProfesional.setText(datoProfesionalOriginal);
+		}
+		else if(persona instanceof Obrero)
+		{
+			nivelOriginal="Obrero";
+			datoProfesionalOriginal = "";
+			Obrero obrero = (Obrero) persona;
+			if(!obrero.getHabilidades().isEmpty())
+			{
+				datoProfesionalOriginal = obrero.getHabilidades().get(0);
+			}
 
+			comboBoxAcademico.setSelectedItem("Obrero");
+			txtDatoProfesional.setText(datoProfesionalOriginal);
 
+		}
+		
+		actualizarCampoProfesional();
+		txtDatoProfesional.setEditable(false);
 	}
 }
