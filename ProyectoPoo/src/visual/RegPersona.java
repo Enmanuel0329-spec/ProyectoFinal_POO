@@ -37,6 +37,11 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+import java.awt.Image;
+import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import logico.Persona;
 import logico.Tecnico;
 import logico.Universitario;
@@ -64,7 +69,10 @@ public class RegPersona extends JDialog {
 	private Persona personaOriginal;
 	private String nivelOriginal;
 	private String datoProfesionalOriginal;
-
+	private JPanel panelFoto;
+	private JLabel lblFotoPerfil;
+	private JButton btnSeleccionarFoto;
+	private String rutaFotoSeleccionada;
 	/**
 	 * Launch the application.
 	 */
@@ -256,6 +264,46 @@ public class RegPersona extends JDialog {
 			
 		});
 		txtDatoProfesional.setColumns(10);
+		
+		panelFoto = new JPanel();
+
+		panelFoto.setBorder(new TitledBorder(
+				UIManager.getBorder("TitledBorder.border"),
+				"Foto de perfil",
+				TitledBorder.CENTER,
+				TitledBorder.TOP,
+				null,
+				new Color(0, 0, 0)
+		));
+
+		panelFoto.setBounds(540, 13, 185, 250);
+		panelFoto.setLayout(null);
+
+		/*
+		 * Se mantiene oculto cuando se registra.
+		 */
+		panelFoto.setVisible(false);
+
+		contentPanel.add(panelFoto);
+
+		lblFotoPerfil = new JLabel("Sin foto");
+		lblFotoPerfil.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFotoPerfil.setBounds(18, 25, 150, 150);
+		panelFoto.add(lblFotoPerfil);
+
+		btnSeleccionarFoto = new JButton("Seleccionar foto");
+		btnSeleccionarFoto.setBounds(18, 190, 150, 25);
+
+		btnSeleccionarFoto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				seleccionarFotoPerfil();
+			}
+		});
+
+		panelFoto.add(btnSeleccionarFoto);
+		
+		
+
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -429,6 +477,12 @@ public class RegPersona extends JDialog {
 
 			person = obrero;
 		}
+		if (person != null) {
+
+			if (update) {
+				person.setRutaFotoPerfil(rutaFotoSeleccionada);
+			}
+		}
 
 		return person;
 
@@ -459,13 +513,56 @@ public class RegPersona extends JDialog {
 				
 
 	}
+	private void mostrarFotoPerfil(String rutaFoto) {
+
+		if (rutaFoto == null || rutaFoto.trim().isEmpty()) {
+
+			lblFotoPerfil.setIcon(null);
+			lblFotoPerfil.setText("Sin foto");
+			return;
+		}
+
+		File archivo = new File(rutaFoto);
+
+		if (!archivo.exists()) {
+
+			lblFotoPerfil.setIcon(null);
+			lblFotoPerfil.setText("Foto no encontrada");
+			return;
+		}
+
+		ImageIcon imagenOriginal = new ImageIcon(rutaFoto);
+		Image imagenRedimensionada =imagenOriginal.getImage().getScaledInstance(150,150,Image.SCALE_SMOOTH);
+
+		lblFotoPerfil.setText("");
+		lblFotoPerfil.setIcon(new ImageIcon(imagenRedimensionada)
+		);
+	}
+	private void seleccionarFotoPerfil() {
+
+		JFileChooser selector = new JFileChooser();
+		FileNameExtensionFilter filtro =new FileNameExtensionFilter("Imagenes JPG y PNG","jpg","jpeg","png");
+		selector.setFileFilter(filtro);
+		int opcion = selector.showOpenDialog(this);
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+
+			File archivo = selector.getSelectedFile();
+			rutaFotoSeleccionada = archivo.getAbsolutePath();
+			mostrarFotoPerfil(rutaFotoSeleccionada);
+		}
+	}
 	public void cargarDatos(Persona persona, int index)
 	{
 		update=true ;
 		indexUpd=index;
+		setSize(760, 540);
+		setLocationRelativeTo(null);
+		panelFoto.setVisible(true);
 		setTitle("Modificar Persona");
 		okButton.setText("Modificar");
 		personaOriginal=persona;
+		rutaFotoSeleccionada = persona.getRutaFotoPerfil();
+		mostrarFotoPerfil(rutaFotoSeleccionada);
 		
 		txtId.setText(persona.getId());
 		txtId.setEditable(false);
