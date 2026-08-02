@@ -429,4 +429,53 @@ public class BolsaLaboral implements Serializable {
 		}
 		return encontrado;
 	}
+	public int cantSolicitudesPendientes () 
+	{
+		int cant=0;
+		for(Solicitud solicitud: lasSolicitudes)
+		{
+			if(solicitud.getEstado().equalsIgnoreCase("Activa"))
+			{
+				cant++;
+			}
+		}
+		return cant;
+	}
+	public int cantSolicitudesCompletados () 
+	{
+		int cant=0;
+		for(Solicitud solicitud: lasSolicitudes)
+		{
+			if(solicitud.getEstado().equalsIgnoreCase("Completada") 
+					|| solicitud.getEstado().equalsIgnoreCase("Contratado") )
+			{
+				cant++;
+			}
+		}
+		return cant;
+	}
+	public int cantOfertasPendientes () 
+	{
+		int cant=0;
+		for(Oferta oferta: lasOfertas)
+		{
+			if(oferta.isActiva() && oferta.getCantidadPuestos()>0)
+			{
+				cant++;
+			}
+		}
+		return cant;
+	}
+	public int cantOfertasCompletadas () 
+	{
+		int cant=0;
+		for(Oferta oferta: lasOfertas)
+		{
+			if(!oferta.isActiva() || oferta.getCantidadPuestos()==0)
+			{
+				cant++;
+			}
+		}
+		return cant;
+	}
 }
