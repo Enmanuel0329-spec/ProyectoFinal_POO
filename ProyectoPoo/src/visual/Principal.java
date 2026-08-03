@@ -42,6 +42,8 @@ public class Principal extends JFrame {
 	private JMenuItem mntmRespaldo;
 	private JMenuItem mntmConsultarMisSolicitudes;
 	private JMenuItem mntmComparativaMensual;
+	private JMenu mnMisEmpleados;
+	private JMenuItem mntmVerEmpleados;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() 
@@ -246,6 +248,22 @@ public class Principal extends JFrame {
 			}});
 		mnAdministracion.add(mntmEvolucion);
 		
+		mnMisEmpleados = new JMenu("Mis Empleados");
+		mnMisEmpleados.setFont(new Font("Arial Narrow", Font.BOLD, 15));
+		menuBar.add(mnMisEmpleados);
+
+		mntmVerEmpleados = new JMenuItem("Consultar");
+		mntmVerEmpleados.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        Empresa empresaActual = (Empresa) usuarioLogueado;
+		        ListarMisEmpleados lista = new ListarMisEmpleados(empresaActual);
+		        lista.setModal(true);
+		        lista.setVisible(true);
+		    }
+		});
+		mntmVerEmpleados.setFont(new Font("Arial Narrow", Font.BOLD, 14));
+		mnMisEmpleados.add(mntmVerEmpleados);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -279,6 +297,7 @@ public class Principal extends JFrame {
 				mntmRenunciar.setVisible(true);
 			}
 
+			mnMisEmpleados.setVisible(false);
 		}
 		else if (usuario == null) {
 			// Admin
@@ -288,6 +307,8 @@ public class Principal extends JFrame {
 			mnSolicitudes.setVisible(true);
 			mnMisSolicitudes.setVisible(false);
 			mnAdministracion.setVisible(true);
+			
+			mnMisEmpleados.setVisible(false);
 		}
 		else if (usuario instanceof Empresa) {
 			mnCandidatos.setVisible(false);
@@ -296,11 +317,14 @@ public class Principal extends JFrame {
 			mnSolicitudes.setVisible(false);
 			mnMisSolicitudes.setVisible(false); 
 			mnAdministracion.setVisible(false); 
+			
+			mnMisEmpleados.setVisible(true);
 
 		} else {
 			mnMisSolicitudes.setVisible(false);
 			mnSolicitudes.setVisible(false);
 			mnAdministracion.setVisible(false);
+			mnMisEmpleados.setVisible(false);
 		}
 	}
 }
