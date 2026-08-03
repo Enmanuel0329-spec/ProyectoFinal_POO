@@ -38,7 +38,7 @@ public class ListarOfertas extends JDialog {
 	private JButton btnEliminar;
 	private JButton btnAplicar;
 	private JButton btnMatchear;
-	
+
 	private boolean esEmpresa;
 	private boolean esAdmin;
 	private Empresa empresaActual;
@@ -65,7 +65,7 @@ public class ListarOfertas extends JDialog {
 				candidatoActual = (Persona) usuarioLogueado;
 			}
 		}
-		
+
 
 		setResizable(false);
 		setTitle(esEmpresa ? "Mis Ofertas" : "Catalogo de Ofertas");
@@ -105,8 +105,8 @@ public class ListarOfertas extends JDialog {
 									btnModificar.setEnabled(true);
 									btnEliminar.setEnabled(true);
 									if (esEmpresa) {
-					                    btnMatchear.setEnabled(true);
-					                }
+										btnMatchear.setEnabled(true);
+									}
 								} else {
 									btnAplicar.setEnabled(selected != null && selected.isActiva()
 											&& selected.getCantidadPuestos() > 0);
@@ -125,7 +125,7 @@ public class ListarOfertas extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
 			if (esEmpresa || esAdmin) {
-				
+
 				if (esEmpresa) {					
 					btnMatchear = new JButton("Buscar candidatos");
 					btnMatchear.setForeground(new Color(255, 255, 255));
@@ -142,7 +142,7 @@ public class ListarOfertas extends JDialog {
 					});
 					buttonPane.add(btnMatchear);
 				}
-				
+
 				btnModificar = new JButton("Modificar");
 				btnModificar.setForeground(new Color(255, 255, 255));
 				btnModificar.setBackground(new Color(100, 149, 237));
@@ -157,7 +157,7 @@ public class ListarOfertas extends JDialog {
 						}
 					}
 				});
-				
+
 				btnModificar.setEnabled(false);
 				buttonPane.add(btnModificar);
 
@@ -171,15 +171,26 @@ public class ListarOfertas extends JDialog {
 									"Estas seguro que deseas eliminar la oferta " + selected.getCodigo() + "?",
 									"Eliminar Oferta", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 							if (confirmacion == JOptionPane.YES_OPTION) {
-								BolsaLaboral.getInstancia().eliminarOferta(selected);
-								btnModificar.setEnabled(false);
-								btnEliminar.setEnabled(false);
-								
-								if (esEmpresa) {
-				                    btnMatchear.setEnabled(false);
-				                }
 
-								cargarOfertas();
+								boolean eliminado = BolsaLaboral.getInstancia().eliminarOferta(selected);
+								if (eliminado) {
+									JOptionPane.showMessageDialog(null, "Oferta eliminada satisfactoriamente.",
+											"Exito", JOptionPane.INFORMATION_MESSAGE);
+									BolsaLaboral.getInstancia().eliminarOferta(selected);
+									btnModificar.setEnabled(false);
+									btnEliminar.setEnabled(false);
+
+									if (esEmpresa) {
+										btnMatchear.setEnabled(false);
+									}
+
+									cargarOfertas();
+
+								} else {
+									JOptionPane.showMessageDialog(null,
+											"No se puede eliminar: esta oferta tiene empleados activos contratados. Debes despedirlos primero.",
+											"Accion no permitida", JOptionPane.WARNING_MESSAGE);
+								}
 							}
 						}
 					}
@@ -226,7 +237,7 @@ public class ListarOfertas extends JDialog {
 			ofertas = BolsaLaboral.getInstancia().ofertasPorEmpresa(empresaActual);
 		}
 		else if (esAdmin) {
-	        ofertas = BolsaLaboral.getInstancia().getLasOfertas();
+			ofertas = BolsaLaboral.getInstancia().getLasOfertas();
 		}
 		else {
 			ofertas = new ArrayList<Oferta>();

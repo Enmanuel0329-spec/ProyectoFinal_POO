@@ -53,9 +53,21 @@ public class BolsaLaboral implements Serializable {
 		guardarMemoria();
 	}
 
-	public void eliminarOferta(Oferta o) {
-		lasOfertas.remove(o);
-		guardarMemoria();
+	public boolean eliminarOferta(Oferta o) {
+	    boolean tieneEmpleadosActivos = false;
+	    for (Solicitud s : lasSolicitudes) {
+	        if (s.getOfertaContratada() != null
+	                && s.getOfertaContratada().getCodigo().equals(o.getCodigo())
+	                && s.getEstado().equalsIgnoreCase("completada")) {
+	            tieneEmpleadosActivos = true;
+	        }
+	    }
+	    if (!tieneEmpleadosActivos) {
+	        lasOfertas.remove(o);
+	        guardarMemoria();
+	        return true;
+	    }
+	    return false;
 	}
 
 	public void registrarSolicitud(Solicitud s) {
