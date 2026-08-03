@@ -176,7 +176,6 @@ public class ListarOfertas extends JDialog {
 								if (eliminado) {
 									JOptionPane.showMessageDialog(null, "Oferta eliminada satisfactoriamente.",
 											"Exito", JOptionPane.INFORMATION_MESSAGE);
-									BolsaLaboral.getInstancia().eliminarOferta(selected);
 									btnModificar.setEnabled(false);
 									btnEliminar.setEnabled(false);
 
