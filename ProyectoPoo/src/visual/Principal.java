@@ -318,7 +318,9 @@ public class Principal extends JFrame {
 			mnMisSolicitudes.setVisible(false); 
 			mnAdministracion.setVisible(false); 
 			
+			
 			mnMisEmpleados.setVisible(true);
+			mnCentros.setVisible(false); 
 
 		} else {
 			mnMisSolicitudes.setVisible(false);
