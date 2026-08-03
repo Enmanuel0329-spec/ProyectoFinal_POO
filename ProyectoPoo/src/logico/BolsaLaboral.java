@@ -54,20 +54,20 @@ public class BolsaLaboral implements Serializable {
 	}
 
 	public boolean eliminarOferta(Oferta o) {
-	    boolean tieneEmpleadosActivos = false;
-	    for (Solicitud s : lasSolicitudes) {
-	        if (s.getOfertaContratada() != null
-	                && s.getOfertaContratada().getCodigo().equals(o.getCodigo())
-	                && s.getEstado().equalsIgnoreCase("completada")) {
-	            tieneEmpleadosActivos = true;
-	        }
-	    }
-	    if (!tieneEmpleadosActivos) {
-	        lasOfertas.remove(o);
-	        guardarMemoria();
-	        return true;
-	    }
-	    return false;
+		boolean tieneEmpleadosActivos = false;
+		for (Solicitud s : lasSolicitudes) {
+			if (s.getOfertaContratada() != null
+					&& s.getOfertaContratada().getCodigo().equals(o.getCodigo())
+					&& s.getEstado().equalsIgnoreCase("completada")) {
+				tieneEmpleadosActivos = true;
+			}
+		}
+		if (!tieneEmpleadosActivos) {
+			lasOfertas.remove(o);
+			guardarMemoria();
+			return true;
+		}
+		return false;
 	}
 
 	public void registrarSolicitud(Solicitud s) {
@@ -188,9 +188,10 @@ public class BolsaLaboral implements Serializable {
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) continue;
 			if (!solicitud.getArea().equalsIgnoreCase(oferta.getArea())) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("renuncio")) continue;
-
+			if (solicitud.getEstado().equalsIgnoreCase("despedido")) continue;
+			
 			int puntos = 0;
-			float total = 7;
+			float total = 8;
 			boolean coincidePuesto = false;
 
 			if (solicitud.getSolicitante() instanceof Universitario && 
@@ -225,19 +226,22 @@ public class BolsaLaboral implements Serializable {
 			String[] palabrasOferta = oferta.getDescripcionPuesto().toLowerCase().split(" ");
 			String[] palabrasSolicitud = solicitud.getCargoDeseado().toLowerCase().split(" ");
 
-			int indOferta = 0;
-			while (!coincidePuesto && indOferta < palabrasOferta.length) {
-				int indSolicitud = 0;
-				while (!coincidePuesto && indSolicitud < palabrasSolicitud.length) {
-					if (palabrasOferta[indOferta].equals(palabrasSolicitud[indSolicitud]) && palabrasOferta[indOferta].length() > 3) {
+			for (String pOferta : palabrasOferta) {
+				for (String pSolicitud : palabrasSolicitud) {
+					if (pOferta.equals(pSolicitud) && pOferta.length() > 3) {
 						coincidePuesto = true;
+						break;
 					}
-					indSolicitud++;
 				}
-				indOferta++;
+				if (coincidePuesto) break;
 			}
-
 			if (coincidePuesto) puntos++;
+
+			boolean coincideRangoSalarios = (solicitud.getSalarioMinimo() <= oferta.getSalarioMaximo()) && 
+					(solicitud.getSalarioMaximo() >= oferta.getSalarioMinimo());
+			if (coincideRangoSalarios) {
+				puntos++;
+			}
 
 			float porcentaje = (  (float)puntos / total) * 100;
 
@@ -270,7 +274,7 @@ public class BolsaLaboral implements Serializable {
 		solicitudContratada.setEstado("completada");
 		oferta.setCantidadPuestos(oferta.getCantidadPuestos() - 1);
 		solicitudContratada.setOfertaContratada(oferta);
-	    solicitudContratada.setFechaContratacion(new Date());
+		solicitudContratada.setFechaContratacion(new Date());
 		if (oferta.getCantidadPuestos() == 0) {
 			oferta.setActiva(false);
 		}
@@ -305,7 +309,7 @@ public class BolsaLaboral implements Serializable {
 			persona.setRutaFotoPerfil(ruta);
 
 			System.out.println("La foto ha sido copiada con éxito a: " + ruta);
-			
+
 			guardarMemoria();
 
 		} catch (IOException e) {
@@ -318,12 +322,12 @@ public class BolsaLaboral implements Serializable {
 			if (solicitud.getEstado().equalsIgnoreCase("completada")) {
 				solicitud.setEstado("renuncio");
 				Oferta ofertaLiberada = solicitud.getOfertaContratada();
-	            if (ofertaLiberada != null) {
-	                ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
-	                if (!ofertaLiberada.isActiva()) {
-	                    ofertaLiberada.setActiva(true);
-	                }
-	            }
+				if (ofertaLiberada != null) {
+					ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
+					if (!ofertaLiberada.isActiva()) {
+						ofertaLiberada.setActiva(true);
+					}
+				}
 			}
 			else if (solicitud.getEstado().equalsIgnoreCase("hold")) {
 				solicitud.setEstado("activa");
@@ -409,7 +413,7 @@ public class BolsaLaboral implements Serializable {
 		String id = "U-" + generadorIdUsuario;
 		Usuario u = new Usuario(id, username, password, empresa, null, true);
 		registrarUsuario(u);
-		
+
 		return u;
 	}
 
@@ -490,39 +494,39 @@ public class BolsaLaboral implements Serializable {
 		}
 		return cant;
 	}
-	
+
 	public void despedirCandidato(Solicitud solicitudDespedida) {
-	    Persona persona = solicitudDespedida.getSolicitante();
-	    persona.setDisponible(true);
-	    solicitudDespedida.setEstado("despedido");
+		Persona persona = solicitudDespedida.getSolicitante();
+		persona.setDisponible(true);
+		solicitudDespedida.setEstado("despedido");
 
-	    Oferta ofertaLiberada = solicitudDespedida.getOfertaContratada();
-	    if (ofertaLiberada != null) {
-	        ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
-	        if (!ofertaLiberada.isActiva()) {
-	            ofertaLiberada.setActiva(true);
-	        }
-	    }
+		Oferta ofertaLiberada = solicitudDespedida.getOfertaContratada();
+		if (ofertaLiberada != null) {
+			ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
+			if (!ofertaLiberada.isActiva()) {
+				ofertaLiberada.setActiva(true);
+			}
+		}
 
-	    for (Solicitud s : solicitudesPorPersona(persona)) {
-	        if (!s.getCodigo().equals(solicitudDespedida.getCodigo()) &&
-	                s.getEstado().equalsIgnoreCase("hold")) {
-	            s.setEstado("activa");
-	        }
-	    }
-	    guardarMemoria();
+		for (Solicitud s : solicitudesPorPersona(persona)) {
+			if (!s.getCodigo().equals(solicitudDespedida.getCodigo()) &&
+					s.getEstado().equalsIgnoreCase("hold")) {
+				s.setEstado("activa");
+			}
+		}
+		guardarMemoria();
 	}
-	
+
 	public ArrayList<Solicitud> empleadosPorEmpresa(Empresa e) {
-	    ArrayList<Solicitud> resultado = new ArrayList<>();
-	    for (Solicitud s : lasSolicitudes) {
-	        if (s.getEstado().equalsIgnoreCase("completada")
-	                && s.getOfertaContratada() != null
-	                && s.getOfertaContratada().getEmpresa().getRnc().equals(e.getRnc())) {
-	            resultado.add(s);
-	        }
-	    }
-	    return resultado;
+		ArrayList<Solicitud> resultado = new ArrayList<>();
+		for (Solicitud s : lasSolicitudes) {
+			if (s.getEstado().equalsIgnoreCase("completada")
+					&& s.getOfertaContratada() != null
+					&& s.getOfertaContratada().getEmpresa().getRnc().equals(e.getRnc())) {
+				resultado.add(s);
+			}
+		}
+		return resultado;
 	}
-	
+
 }
