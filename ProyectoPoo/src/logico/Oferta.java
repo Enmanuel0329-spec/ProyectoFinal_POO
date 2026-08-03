@@ -57,21 +57,31 @@ public class Oferta implements Serializable {
 	public int getCantidadPuestos() { return cantidadPuestos; }
 	public void setCantidadPuestos(int cantidadPuestos) { this.cantidadPuestos = cantidadPuestos; }
 	public String getSexo() { return sexo; }
+	public void setSexo(String sexo) { this.sexo = sexo; }
 	public String getTipo() { return tipo; }
+	public void setTipo(String tipo) { this.tipo = tipo; }
 	public boolean isRequiereLicencia() { return requiereLicencia; }
+	public void setRequiereLicencia(boolean requiereLicencia) { this.requiereLicencia = requiereLicencia; }
 	public boolean isRequiereDispMudarse() { return requiereDispMudarse; }
+	public void setRequiereDispMudarse(boolean requiereDispMudarse) { this.requiereDispMudarse = requiereDispMudarse; }
 	public String getModalidad() { return modalidad; }
+	public void setModalidad(String modalidad) { this.modalidad = modalidad; }
 	public String getProvincia() { return provincia; }
+	public void setProvincia(String provincia) { this.provincia = provincia; }
 	public float getSalarioMinimo() { return salarioMinimo; }
+	public void setSalarioMinimo(float salarioMinimo) { this.salarioMinimo = salarioMinimo; }
 	public float getSalarioMaximo() { return salarioMaximo; }
+	public void setSalarioMaximo(float salarioMaximo) { this.salarioMaximo = salarioMaximo; }
 	public Date getFecha() { return fecha; }
 	public Empresa getEmpresa() { return empresa; }
 	public boolean isActiva() { return activa; }
 	public void setActiva(boolean activa) { this.activa = activa; }
 	public String getArea() { return area; }
+	public void setArea(String area) { this.area = area; }
 	public float getPorcentajeMinimo() { return porcentajeMinimo; }
 	public void setPorcentajeMinimo(float porcentajeMinimo) { this.porcentajeMinimo = porcentajeMinimo; }
 	public String getTipoJornada() { return tipoJornada; }
 	public void setTipoJornada(String tipoJornada) { this.tipoJornada = tipoJornada; }
 	public String getEspecialidad() { return especialidad; }
+	public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
 }

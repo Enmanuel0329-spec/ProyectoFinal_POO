@@ -42,6 +42,7 @@ public class RegOferta extends JDialog {
 	private JCheckBox chkLicencia;
 	private JCheckBox chkMudarse;
 	private Empresa empresa;
+	private Oferta ofertaAEditar;
 
 	/**
 	 * Launch the application.
@@ -56,9 +57,17 @@ public class RegOferta extends JDialog {
 		}
 	}
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public RegOferta(Empresa empresa) {
+		this(empresa, null);
+	}
+
+	public RegOferta(Empresa empresa, Oferta ofertaAEditar) {
 		this.empresa = empresa;
-		setTitle("Registrar Oferta");
+		this.ofertaAEditar = ofertaAEditar;
+		setTitle(ofertaAEditar == null ? "Registrar Oferta" : "Modificar Oferta");
 		setResizable(false);
 		setBounds(100, 100, 600, 500);
 		setLocationRelativeTo(null);
@@ -102,7 +111,6 @@ public class RegOferta extends JDialog {
 		txtCodigo = new JTextField();
 		txtCodigo.setEditable(false);
 		txtCodigo.setBounds(420, 38, 120, 26);
-		txtCodigo.setText("O-" + BolsaLaboral.generadorIdOferta);
 		panelDatos.add(txtCodigo);
 
 		JLabel lblNivel = new JLabel("Nivel academico:");
@@ -143,7 +151,6 @@ public class RegOferta extends JDialog {
 		panelDatos.add(lblArea);
 
 		cmbArea = new JComboBox<>();
-		
 		cmbArea.addItem("Tecnologia");
 		cmbArea.addItem("Salud");
 		cmbArea.addItem("Administracion");
@@ -252,7 +259,7 @@ public class RegOferta extends JDialog {
 		});
 		buttonPane.add(btnCancelar);
 
-		JButton btnRegistrar = new JButton("Registrar");
+		JButton btnRegistrar = new JButton(ofertaAEditar == null ? "Registrar" : "Actualizar");
 		btnRegistrar.setBackground(new Color(30, 144, 255));
 		btnRegistrar.setForeground(Color.WHITE);
 		btnRegistrar.addActionListener(new ActionListener() {
@@ -276,35 +283,89 @@ public class RegOferta extends JDialog {
 				float porcentaje = ((Number) spnPorcentaje.getValue()).floatValue();
 				int cantidad = (Integer) spnCantidad.getValue();
 
-				Oferta oferta = new Oferta(
-						txtCodigo.getText(),
-						area,
-						txtDescripcion.getText(),
-						especialidad,
-						cantidad,
-						sexo,
-						nivel,
-						chkLicencia.isSelected(),
-						chkMudarse.isSelected(),
-						modalidad,
-						jornada,
-						provincia,
-						salMin,
-						salMax,
-						porcentaje,
-						new Date(),
-						empresa
-						);
+				if (salMin > salMax) {
+					JOptionPane.showMessageDialog(null,
+							"El salario minimo no puede ser mayor que el maximo.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
-				BolsaLaboral.getInstancia().registrarOferta(oferta);
-				JOptionPane.showMessageDialog(null, "Oferta registrada!", 
-						"Informacion", JOptionPane.INFORMATION_MESSAGE);
+				if (RegOferta.this.ofertaAEditar == null) {
+					Oferta oferta = new Oferta(
+							txtCodigo.getText(),
+							area,
+							txtDescripcion.getText(),
+							especialidad,
+							cantidad,
+							sexo,
+							nivel,
+							chkLicencia.isSelected(),
+							chkMudarse.isSelected(),
+							modalidad,
+							jornada,
+							provincia,
+							salMin,
+							salMax,
+							porcentaje,
+							new Date(),
+							empresa
+							);
+
+					BolsaLaboral.getInstancia().registrarOferta(oferta);
+					JOptionPane.showMessageDialog(null, "Oferta registrada!", 
+							"Informacion", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					RegOferta.this.ofertaAEditar.setArea(area);
+					RegOferta.this.ofertaAEditar.setDescripcionPuesto(txtDescripcion.getText());
+					RegOferta.this.ofertaAEditar.setEspecialidad(especialidad);
+					RegOferta.this.ofertaAEditar.setCantidadPuestos(cantidad);
+					RegOferta.this.ofertaAEditar.setSexo(sexo);
+					RegOferta.this.ofertaAEditar.setTipo(nivel);
+					RegOferta.this.ofertaAEditar.setRequiereLicencia(chkLicencia.isSelected());
+					RegOferta.this.ofertaAEditar.setRequiereDispMudarse(chkMudarse.isSelected());
+					RegOferta.this.ofertaAEditar.setModalidad(modalidad);
+					RegOferta.this.ofertaAEditar.setTipoJornada(jornada);
+					RegOferta.this.ofertaAEditar.setProvincia(provincia);
+					RegOferta.this.ofertaAEditar.setSalarioMinimo(salMin);
+					RegOferta.this.ofertaAEditar.setSalarioMaximo(salMax);
+					RegOferta.this.ofertaAEditar.setPorcentajeMinimo(porcentaje);
+
+					BolsaLaboral.getInstancia().guardarMemoria();
+					JOptionPane.showMessageDialog(null, "Oferta actualizada!", 
+							"Informacion", JOptionPane.INFORMATION_MESSAGE);
+				}
 				dispose();
 			}
 		});
 		buttonPane.add(btnRegistrar);
 		getRootPane().setDefaultButton(btnRegistrar);
-		cargarEspecialidades(cmbArea.getSelectedItem().toString());
+
+		if (ofertaAEditar == null) {
+			txtCodigo.setText("O-" + BolsaLaboral.generadorIdOferta);
+			cargarEspecialidades(cmbArea.getSelectedItem().toString());
+		} else {
+			txtCodigo.setText(ofertaAEditar.getCodigo());
+			txtDescripcion.setText(ofertaAEditar.getDescripcionPuesto());
+			spnCantidad.setValue(ofertaAEditar.getCantidadPuestos());
+			cmbNivel.setSelectedItem(capitalizar(ofertaAEditar.getTipo()));
+			cmbSexo.setSelectedItem(capitalizar(ofertaAEditar.getSexo()));
+			cmbJornada.setSelectedItem(capitalizar(ofertaAEditar.getTipoJornada()));
+			cmbArea.setSelectedItem(ofertaAEditar.getArea());
+			cargarEspecialidades(ofertaAEditar.getArea());
+			cmbEspecialidad.setSelectedItem(ofertaAEditar.getEspecialidad());
+			spnSalarioMin.setValue((int) ofertaAEditar.getSalarioMinimo());
+			spnSalarioMax.setValue((int) ofertaAEditar.getSalarioMaximo());
+			cmbProvincia.setSelectedItem(ofertaAEditar.getProvincia());
+			cmbModalidad.setSelectedItem(capitalizar(ofertaAEditar.getModalidad()));
+			chkLicencia.setSelected(ofertaAEditar.isRequiereLicencia());
+			chkMudarse.setSelected(ofertaAEditar.isRequiereDispMudarse());
+			spnPorcentaje.setValue((int) ofertaAEditar.getPorcentajeMinimo());
+		}
+	}
+
+	private String capitalizar(String texto) {
+		if (texto == null || texto.isEmpty()) return texto;
+		return texto.substring(0, 1).toUpperCase() + texto.substring(1).toLowerCase();
 	}
 
 	private void cargarEspecialidades(String area) {
@@ -346,5 +407,4 @@ public class RegOferta extends JDialog {
 			cmbEspecialidad.addItem("Telemercadeo");
 		}
 	}
-
 }

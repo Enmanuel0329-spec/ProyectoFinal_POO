@@ -5,10 +5,13 @@ import java.awt.FlowLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +31,8 @@ public class ListarMisSolicitudes extends JDialog {
 	private static DefaultTableModel model;
 	private static Object[] row;
 	private Persona candidatoActual;
+	private Solicitud selected;
+	private JButton btnModificar;
 
 	public ListarMisSolicitudes(Persona candidatoActual) {
 		this.candidatoActual = candidatoActual;
@@ -56,6 +61,18 @@ public class ListarMisSolicitudes extends JDialog {
 					model.setColumnIdentifiers(headers);
 					table = new JTable();
 					table.setModel(model);
+					table.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int index = table.getSelectedRow();
+							if (index >= 0) {
+								String codigo = table.getValueAt(index, 0).toString();
+								selected = BolsaLaboral.getInstancia().buscarSolicitud(codigo);
+								btnModificar.setEnabled(selected != null
+										&& selected.getEstado().equalsIgnoreCase("activa"));
+							}
+						}
+					});
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -64,6 +81,23 @@ public class ListarMisSolicitudes extends JDialog {
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				btnModificar = new JButton("Modificar");
+				btnModificar.setForeground(new Color(255, 255, 255));
+				btnModificar.setBackground(new Color(100, 149, 237));
+				btnModificar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if (selected != null) {
+							RegSolicitud reg = new RegSolicitud(candidatoActual, selected);
+							reg.setModal(true);
+							reg.setVisible(true);
+							loadSolicitudes();
+						}
+					}
+				});
+				btnModificar.setEnabled(false);
+				buttonPane.add(btnModificar);
+			}
 			{
 				JButton cancelButton = new JButton("Cerrar");
 				cancelButton.addActionListener(new ActionListener() {

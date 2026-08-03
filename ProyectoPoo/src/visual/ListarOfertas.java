@@ -148,9 +148,16 @@ public class ListarOfertas extends JDialog {
 				btnModificar.setBackground(new Color(100, 149, 237));
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-	
+						if (selected != null) {
+							Empresa empresaDeLaOferta = esAdmin ? selected.getEmpresa() : empresaActual;
+							RegOferta reg = new RegOferta(empresaDeLaOferta, selected);
+							reg.setModal(true);
+							reg.setVisible(true);
+							cargarOfertas();
+						}
 					}
 				});
+				
 				btnModificar.setEnabled(false);
 				buttonPane.add(btnModificar);
 

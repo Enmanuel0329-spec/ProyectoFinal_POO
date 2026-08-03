@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,8 +17,6 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 
 import logico.BolsaLaboral;
 import logico.Oferta;
@@ -27,7 +26,7 @@ import logico.Solicitud;
 public class RegSolicitud extends JDialog {
 
 	private Persona candidatoActual;
-	private Solicitud solicitudExistente = null;
+	private Solicitud solicitudAEditar;
 
 	private JComboBox<String> cmbArea;
 	private JTextField txtCargo;
@@ -40,13 +39,39 @@ public class RegSolicitud extends JDialog {
 	 * @wbp.parser.constructor
 	 */
 	public RegSolicitud(Persona userLogueado) {
-		this(userLogueado, null);
+		this(userLogueado, (Oferta) null);
 	}
 
 	public RegSolicitud(Persona userLogueado, Oferta ofertaBase) {
 		this.candidatoActual = userLogueado;
+		this.solicitudAEditar = null;
+		construirVentana();
 
-		setTitle("Gestion de Solicitud de Empleo");
+		if (ofertaBase != null) {
+			cmbArea.setSelectedItem(ofertaBase.getArea());
+			txtCargo.setText(ofertaBase.getDescripcionPuesto());
+			cmbJornada.setSelectedItem(capitalizar(ofertaBase.getTipoJornada()));
+			spnSalarioMin.setValue((int) ofertaBase.getSalarioMinimo());
+			spnSalarioMax.setValue((int) ofertaBase.getSalarioMaximo());
+			chkMudarse.setSelected(ofertaBase.isRequiereDispMudarse());
+		}
+	}
+
+	public RegSolicitud(Persona userLogueado, Solicitud solicitudAEditar) {
+		this.candidatoActual = userLogueado;
+		this.solicitudAEditar = solicitudAEditar;
+		construirVentana();
+
+		cmbArea.setSelectedItem(solicitudAEditar.getArea());
+		txtCargo.setText(solicitudAEditar.getCargoDeseado());
+		cmbJornada.setSelectedItem(solicitudAEditar.getTipoJornada());
+		spnSalarioMin.setValue(solicitudAEditar.getSalarioMinimo());
+		spnSalarioMax.setValue(solicitudAEditar.getSalarioMaximo());
+		chkMudarse.setSelected(solicitudAEditar.isDispuestoMudarse());
+	}
+
+	private void construirVentana() {
+		setTitle(solicitudAEditar == null ? "Crear Solicitud de Empleo" : "Modificar Solicitud de Empleo");
 		setResizable(false);
 		setBounds(100, 100, 496, 417);
 		setLocationRelativeTo(null);
@@ -121,34 +146,16 @@ public class RegSolicitud extends JDialog {
 		chkMudarse.setBounds(290, 214, 160, 24);
 		panelDatos.add(chkMudarse);
 
-		ArrayList<Solicitud> misSolicitudes = BolsaLaboral.getInstancia().solicitudesPorPersona(candidatoActual);
-		int i = 0;
-		boolean encontrada = false;
-		while (!encontrada && i < misSolicitudes.size()) {
-			if (misSolicitudes.get(i).getEstado().equalsIgnoreCase("activa")) {
-				solicitudExistente = misSolicitudes.get(i);
-				encontrada = true;
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
 			}
-			i++;
-		}
+		});
+		btnCancelar.setBounds(70, 290, 100, 40);
+		panelDatos.add(btnCancelar);
 
-		if (solicitudExistente != null) {
-			cmbArea.setSelectedItem(solicitudExistente.getArea());
-			txtCargo.setText(solicitudExistente.getCargoDeseado());
-			cmbJornada.setSelectedItem(solicitudExistente.getTipoJornada());
-			spnSalarioMin.setValue(solicitudExistente.getSalarioMinimo());
-			spnSalarioMax.setValue(solicitudExistente.getSalarioMaximo());
-			chkMudarse.setSelected(solicitudExistente.isDispuestoMudarse());
-		} else if (ofertaBase != null) {
-			cmbArea.setSelectedItem(ofertaBase.getArea());
-			txtCargo.setText(ofertaBase.getDescripcionPuesto());
-			cmbJornada.setSelectedItem(capitalizar(ofertaBase.getTipoJornada()));
-			spnSalarioMin.setValue((int) ofertaBase.getSalarioMinimo());
-			spnSalarioMax.setValue((int) ofertaBase.getSalarioMaximo());
-			chkMudarse.setSelected(ofertaBase.isRequiereDispMudarse());
-		}
-
-		JButton btnGuardar = new JButton(solicitudExistente == null ? "Crear Solicitud" : "Actualizar Solicitud");
+		JButton btnGuardar = new JButton(solicitudAEditar == null ? "Crear Solicitud" : "Actualizar Solicitud");
 		btnGuardar.setBackground(new Color(30, 144, 255));
 		btnGuardar.setForeground(Color.WHITE);
 		btnGuardar.addActionListener(new ActionListener() {
@@ -176,7 +183,7 @@ public class RegSolicitud extends JDialog {
 					return;
 				}
 
-				if (solicitudExistente == null) {
+				if (solicitudAEditar == null) {
 					String codigoSol = "SOL-" + BolsaLaboral.generadorIdSolicitud;
 					Solicitud nuevaSolicitud = new Solicitud(codigoSol, candidatoActual, area, cargo,
 							jornada, salMin, salMax, mudarse);
@@ -184,12 +191,12 @@ public class RegSolicitud extends JDialog {
 					JOptionPane.showMessageDialog(null, "Solicitud registrada con exito!",
 							"Exito", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					solicitudExistente.setArea(area);
-					solicitudExistente.setCargoDeseado(cargo);
-					solicitudExistente.setTipoJornada(jornada);
-					solicitudExistente.setSalarioMinimo(salMin);
-					solicitudExistente.setSalarioMaximo(salMax);
-					solicitudExistente.setDispuestoMudarse(mudarse);
+					solicitudAEditar.setArea(area);
+					solicitudAEditar.setCargoDeseado(cargo);
+					solicitudAEditar.setTipoJornada(jornada);
+					solicitudAEditar.setSalarioMinimo(salMin);
+					solicitudAEditar.setSalarioMaximo(salMax);
+					solicitudAEditar.setDispuestoMudarse(mudarse);
 					BolsaLaboral.getInstancia().guardarMemoria();
 					JOptionPane.showMessageDialog(null, "Tu solicitud ha sido actualizada!",
 							"Exito", JOptionPane.INFORMATION_MESSAGE);
@@ -197,7 +204,7 @@ public class RegSolicitud extends JDialog {
 				dispose();
 			}
 		});
-		btnGuardar.setBounds(150, 290, 180, 40);
+		btnGuardar.setBounds(190, 290, 200, 40);
 		panelDatos.add(btnGuardar);
 	}
 
