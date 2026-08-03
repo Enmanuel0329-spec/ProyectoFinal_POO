@@ -478,4 +478,27 @@ public class BolsaLaboral implements Serializable {
 		}
 		return cant;
 	}
+	
+	public void despedirCandidato(Solicitud solicitudDespedida) {
+	    Persona persona = solicitudDespedida.getSolicitante();
+	    persona.setDisponible(true);
+	    solicitudDespedida.setEstado("despedido");
+
+	    Oferta ofertaLiberada = solicitudDespedida.getOfertaContratada();
+	    if (ofertaLiberada != null) {
+	        ofertaLiberada.setCantidadPuestos(ofertaLiberada.getCantidadPuestos() + 1);
+	        if (!ofertaLiberada.isActiva()) {
+	            ofertaLiberada.setActiva(true);
+	        }
+	    }
+
+	    for (Solicitud s : solicitudesPorPersona(persona)) {
+	        if (!s.getCodigo().equals(solicitudDespedida.getCodigo()) &&
+	                s.getEstado().equalsIgnoreCase("hold")) {
+	            s.setEstado("activa");
+	        }
+	    }
+	    guardarMemoria();
+	}
+	
 }
