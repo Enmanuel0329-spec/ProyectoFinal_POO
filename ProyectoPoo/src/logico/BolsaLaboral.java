@@ -501,4 +501,16 @@ public class BolsaLaboral implements Serializable {
 	    guardarMemoria();
 	}
 	
+	public ArrayList<Solicitud> empleadosPorEmpresa(Empresa e) {
+	    ArrayList<Solicitud> resultado = new ArrayList<>();
+	    for (Solicitud s : lasSolicitudes) {
+	        if (s.getEstado().equalsIgnoreCase("completada")
+	                && s.getOfertaContratada() != null
+	                && s.getOfertaContratada().getEmpresa().getRnc().equals(e.getRnc())) {
+	            resultado.add(s);
+	        }
+	    }
+	    return resultado;
+	}
+	
 }
