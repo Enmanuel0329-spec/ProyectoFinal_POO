@@ -11,6 +11,7 @@ public class Solicitud implements Serializable {
 	private String area;
 	private String cargoDeseado;
 	private String tipoJornada; 
+	private String modalidad;
 	private float salarioMinimo;
 	private float salarioMaximo;
 	private boolean dispuestoMudarse;
@@ -22,13 +23,14 @@ public class Solicitud implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public Solicitud(String codigo, Persona solicitante, String area, String cargoDeseado, String tipoJornada,
+	public Solicitud(String codigo, Persona solicitante, String area, String cargoDeseado, String modalidad, String tipoJornada,
 			float salarioMinimo, float salarioMaximo, boolean dispuestoMudarse) {
 		super();
 		this.codigo = codigo;
 		this.solicitante = solicitante;
 		this.area = area;
 		this.cargoDeseado = cargoDeseado;
+		this.modalidad = modalidad;
 		this.tipoJornada = tipoJornada;
 		this.salarioMinimo = salarioMinimo;
 		this.salarioMaximo = salarioMaximo;
@@ -122,6 +124,14 @@ public class Solicitud implements Serializable {
 
 	public void setFechaContratacion(Date fechaContratacion) {
 		this.fechaContratacion = fechaContratacion;
+	}
+
+	public String getModalidad() {
+		return modalidad;
+	}
+
+	public void setModalidad(String modalidad) {
+		this.modalidad = modalidad;
 	}
 	
 	

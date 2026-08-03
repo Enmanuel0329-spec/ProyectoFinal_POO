@@ -189,10 +189,9 @@ public class BolsaLaboral implements Serializable {
 			if (!solicitud.getArea().equalsIgnoreCase(oferta.getArea())) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("renuncio")) continue;
 			if (solicitud.getEstado().equalsIgnoreCase("despedido")) continue;
-			
+
 			int puntos = 0;
-			float total = 8;
-			boolean coincidePuesto = false;
+			float total = 9;
 
 			if (solicitud.getSolicitante() instanceof Universitario && 
 					oferta.getTipo().equalsIgnoreCase("universitario")) puntos++;
@@ -210,7 +209,7 @@ public class BolsaLaboral implements Serializable {
 
 			if (!oferta.isRequiereLicencia() ||
 					solicitud.getSolicitante().isTieneLicencia()) {
-				puntos++;
+				puntos++; 
 			}
 
 			if (!oferta.isRequiereDispMudarse() ||
@@ -222,20 +221,14 @@ public class BolsaLaboral implements Serializable {
 					solicitud.getSolicitante().getProvincia().equalsIgnoreCase(oferta.getProvincia())) {
 				puntos++;
 			}
-
-			String[] palabrasOferta = oferta.getDescripcionPuesto().toLowerCase().split(" ");
-			String[] palabrasSolicitud = solicitud.getCargoDeseado().toLowerCase().split(" ");
-
-			for (String pOferta : palabrasOferta) {
-				for (String pSolicitud : palabrasSolicitud) {
-					if (pOferta.equals(pSolicitud) && pOferta.length() > 3) {
-						coincidePuesto = true;
-						break;
-					}
-				}
-				if (coincidePuesto) break;
+			
+			if (oferta.getModalidad().equalsIgnoreCase(solicitud.getModalidad())) {
+			    puntos++;
 			}
-			if (coincidePuesto) puntos++;
+
+			if( oferta.getEspecialidad().equalsIgnoreCase(solicitud.getCargoDeseado()) ) {
+				puntos++;
+			};
 
 			boolean coincideRangoSalarios = (solicitud.getSalarioMinimo() <= oferta.getSalarioMaximo()) && 
 					(solicitud.getSalarioMaximo() >= oferta.getSalarioMinimo());
@@ -252,12 +245,25 @@ public class BolsaLaboral implements Serializable {
 
 		resultados.sort((r1, r2) ->
 		Float.compare(r2.getPorcentaje(), r1.getPorcentaje()));
+		
+		//Hacer que una persona solo salga una vez (bug resuelto)
+		
+		ArrayList<ResultadoMatcheo> resultadosUnicos = new ArrayList<>();
+		ArrayList<String> idsPersonasProcesadas = new ArrayList<>();
 
-		if (resultados.size() > 3) {
-			return new ArrayList<>(resultados.subList(0, 3));
+		for (ResultadoMatcheo rm : resultados) {
+			String idPersona = rm.getSolicitud().getSolicitante().getId();
+			if (!idsPersonasProcesadas.contains(idPersona)) {
+				resultadosUnicos.add(rm);
+				idsPersonasProcesadas.add(idPersona);
+			}
 		}
 
-		return resultados;
+		if (resultadosUnicos.size() > 3) {
+			return new ArrayList<>(resultadosUnicos.subList(0, 3));
+		}
+		
+		return resultadosUnicos;
 	}
 
 	public void ejecutarMatcheoEmpresa(Empresa e) {
@@ -333,6 +339,7 @@ public class BolsaLaboral implements Serializable {
 				solicitud.setEstado("activa");
 			}
 		}
+		candidato.setDisponible(true);
 		guardarMemoria();
 	}
 

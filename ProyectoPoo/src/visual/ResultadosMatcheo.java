@@ -46,8 +46,8 @@ public class ResultadosMatcheo extends JDialog {
 				true, "Centro", "Santiago", "Femenino", true, "Ingenieria de Sistemas");
 		bolsa.registrarPersona(uni);
 
-		Solicitud solMaria = new Solicitud("SOL-1", uni, "Tecnologia", "Desarrollador", "Tiempo Completo",
-				40000f, 70000f, false);
+		Solicitud solMaria = new Solicitud("SOL-1", uni, "Tecnologia", "Desarrollador", "Remoto",
+				"Tiempo Completo", 40000f, 70000f, false);
 		bolsa.registrarSolicitud(solMaria);
 
 		ResultadosMatcheo dialog = new ResultadosMatcheo(ofertaPrueba);
@@ -57,7 +57,7 @@ public class ResultadosMatcheo extends JDialog {
 
 	public ResultadosMatcheo(Oferta oferta) {
 		this.oferta = oferta;
-		setTitle("Resultados del Matcheo");
+		setTitle("Los mas Aptos");
 		setResizable(false);
 		setBounds(100, 100, 650, 420);
 		setLocationRelativeTo(null);

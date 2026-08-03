@@ -271,7 +271,7 @@ public class Principal extends JFrame {
 
 		mnAdministracion.add(mntmEstadisticaAnual);
 		
-		
+
 		mnMisEmpleados = new JMenu("Mis Empleados");
 		mnMisEmpleados.setFont(new Font("Arial Narrow", Font.BOLD, 15));
 		menuBar.add(mnMisEmpleados);

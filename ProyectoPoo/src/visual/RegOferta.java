@@ -157,6 +157,7 @@ public class RegOferta extends JDialog {
 		cmbArea.addItem("Construccion");
 		cmbArea.addItem("Educacion");
 		cmbArea.addItem("Ventas");
+		cmbArea.addItem("Servicios Generales");
 		cmbArea.setBounds(10, 154, 180, 26);
 		panelDatos.add(cmbArea);
 
@@ -173,7 +174,7 @@ public class RegOferta extends JDialog {
 				cargarEspecialidades(cmbArea.getSelectedItem().toString());
 			}
 		});
-		
+
 		JPanel panelSalario = new JPanel();
 		panelSalario.setBackground(Color.WHITE);
 		panelSalario.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
@@ -373,38 +374,62 @@ public class RegOferta extends JDialog {
 
 		if (area.equalsIgnoreCase("Tecnologia")) {
 			cmbEspecialidad.addItem("Desarrollo de Software");
-			cmbEspecialidad.addItem("Redes");
+			cmbEspecialidad.addItem("Redes y Telecomunicaciones");
 			cmbEspecialidad.addItem("Ciberseguridad");
 			cmbEspecialidad.addItem("Soporte Tecnico");
 			cmbEspecialidad.addItem("Bases de Datos");
+			cmbEspecialidad.addItem("Diseno Web / UX");
+			cmbEspecialidad.addItem("Analisis de Datos");
+
 		} else if (area.equalsIgnoreCase("Salud")) {
 			cmbEspecialidad.addItem("Enfermeria");
 			cmbEspecialidad.addItem("Medicina General");
+			cmbEspecialidad.addItem("Odontologia");
 			cmbEspecialidad.addItem("Farmacia");
 			cmbEspecialidad.addItem("Laboratorio Clinico");
 			cmbEspecialidad.addItem("Fisioterapia");
+			cmbEspecialidad.addItem("Psicologia Clinica");
+
 		} else if (area.equalsIgnoreCase("Administracion")) {
 			cmbEspecialidad.addItem("Contabilidad");
 			cmbEspecialidad.addItem("Recursos Humanos");
-			cmbEspecialidad.addItem("Mercadeo");
+			cmbEspecialidad.addItem("Mercadeo y Publicidad");
 			cmbEspecialidad.addItem("Finanzas");
-			cmbEspecialidad.addItem("Logistica");
+			cmbEspecialidad.addItem("Logistica y Cadena de Suministro");
+			cmbEspecialidad.addItem("Administracion de Empresas");
+
 		} else if (area.equalsIgnoreCase("Construccion")) {
 			cmbEspecialidad.addItem("Albanileria");
-			cmbEspecialidad.addItem("Electricidad");
+			cmbEspecialidad.addItem("Electricidad Industrial / Residencial");
 			cmbEspecialidad.addItem("Plomeria");
 			cmbEspecialidad.addItem("Carpinteria");
+			cmbEspecialidad.addItem("Refrigeracion y Aire Acondicionado");
+			cmbEspecialidad.addItem("Mecanica Automotriz");
 			cmbEspecialidad.addItem("Supervision de Obra");
+
 		} else if (area.equalsIgnoreCase("Educacion")) {
+			cmbEspecialidad.addItem("Educacion Inicial / Parvularia");
 			cmbEspecialidad.addItem("Docencia Primaria");
 			cmbEspecialidad.addItem("Docencia Secundaria");
+			cmbEspecialidad.addItem("Docencia Universitaria");
 			cmbEspecialidad.addItem("Educacion Especial");
-			cmbEspecialidad.addItem("Psicologia Escolar");
+			cmbEspecialidad.addItem("Orientacion / Psicologia Escolar");
+
 		} else if (area.equalsIgnoreCase("Ventas")) {
 			cmbEspecialidad.addItem("Ventas al Detalle");
 			cmbEspecialidad.addItem("Ventas Corporativas");
 			cmbEspecialidad.addItem("Atencion al Cliente");
 			cmbEspecialidad.addItem("Telemercadeo");
+			cmbEspecialidad.addItem("Cajeros / Facturacion");
+
+		} else if (area.equalsIgnoreCase("Servicios Generales")) {
+			cmbEspecialidad.addItem("Limpieza y Conserjeria");
+			cmbEspecialidad.addItem("Mantenimiento General");
+			cmbEspecialidad.addItem("Seguridad / Vigilancia");
+			cmbEspecialidad.addItem("Jardineria");
+			cmbEspecialidad.addItem("Chofer / Conductor");
+			cmbEspecialidad.addItem("Ayudante General");
 		}
 	}
+
 }
