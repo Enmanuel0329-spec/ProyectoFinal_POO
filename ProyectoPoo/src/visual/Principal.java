@@ -44,6 +44,7 @@ public class Principal extends JFrame {
 	private JMenuItem mntmComparativaMensual;
 	private JMenu mnMisEmpleados;
 	private JMenuItem mntmVerEmpleados;
+	private JMenuItem mntmEstadisticaAnual;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() 
@@ -236,6 +237,8 @@ public class Principal extends JFrame {
 		        GraficoComparativaMensual dialog = new GraficoComparativaMensual();
 		        dialog.setVisible(true);
 		    }});
+		
+		
 		mnAdministracion.add(mntmComparativaMensual);
 		
 		JMenuItem mntmEvolucion = new JMenuItem("Evolución Mensual");
@@ -247,6 +250,27 @@ public class Principal extends JFrame {
 				graficoEvolucion.setVisible(true);
 			}});
 		mnAdministracion.add(mntmEvolucion);
+		
+		mntmEstadisticaAnual = new JMenuItem("Estadística Anual");
+
+		mntmEstadisticaAnual.setFont(
+				new Font("Arial Narrow", Font.BOLD, 14)
+		);
+
+		mntmEstadisticaAnual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				GraficoEstadisticaAnual grafico =
+						new GraficoEstadisticaAnual();
+
+				grafico.setModal(true);
+				grafico.setLocationRelativeTo(Principal.this);
+				grafico.setVisible(true);
+			}
+		});
+
+		mnAdministracion.add(mntmEstadisticaAnual);
+		
 		
 		mnMisEmpleados = new JMenu("Mis Empleados");
 		mnMisEmpleados.setFont(new Font("Arial Narrow", Font.BOLD, 15));
